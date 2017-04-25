@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <meta name="csrf-token" content="{{ Session::token() }}"> 
+
     <title>Aplikasi Angkot Bandung</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -233,9 +233,9 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="http://localhost/webserverangkot/public/">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+                <li class="active"><a href="http://www.angkot.balaikota.info/public/">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
 
-                <li><a href="http://localhost/webserverangkot/public/trayek">Info Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
+                <li><a href="http://www.angkot.balaikota.info/public/trayek">Info Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
                 
             </div>
         </div>
@@ -244,7 +244,7 @@
     <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" style="z-index: 0">
-            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-image: url('http://localhost/webserverangkot/public/images/header.png'); background-size: 100% 100%; ">
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-image: url('http://www.angkot.balaikota.info/public/images/header.png'); background-size: 100% 100%; ">
                 <div class="navbar-header">
                      
 
@@ -260,134 +260,112 @@
                 </div>
                 
                 
-                <!--<img id="image" style="width: 100%" src="http://localhost/webserverangkot/public/images/header.png" alt="Dispute Bills">-->
+                <!--<img id="image" style="width: 100%" src="http://www.angkot.balaikota.info/public/images/header.png" alt="Dispute Bills">-->
                 
             </nav>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4" style="" >
+          
+            <!--<img alt="Bootstrap Image Preview" src="http://www.angkot.balaikota.info/public/images/powered_by.png" class="img-circle" style="border: solid;"> -->
+                <div id="select_routingresult">
+                  <label for="exampleInputEmail1">
+                     Pilihan angkot
+                  </label>
+                
+                  <select class="form-control" name="select_routingresult" id="select_routingresult_select"  >
+                    <!--  <option value="" disabled selected >---pilih---</option> -->
+                  </select>
+                </div>
 
+                <div class="form-group">
+                     
+                    <!--<label for="exampleInputEmail1">
+                        start location
+                    </label>-->
+                    <input type="input" class="form-control" id="start_location" placeholder="Pilih titik awal, atau klik Peta" >
+                     <input type="input" class="form-control" id="start_location_name" placeholder="Pilih titik awal, atau klik Peta" >
+                </div>
+                    
+                    <div id="select_start" class="ui-widget" >
+                        <select class="form-control" name="select_start" id="select_start_select" >
+                     <!--   <option disabled selected>---pilih---</option> -->
+                       </select>
+                    </div>    
+                <br>
 
-              <label for="exampleInputEmail1">
-                  Trayek Angkot
-              </label>
-              <select class="form-control" id="pilih" name="pilih">
-              <option value=99> All </option>
-              <?php foreach ($trip as $a): ?>
-              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name']; ?> </option>  
-              <?php endforeach ?> 
-              </select>
+                <div class="ui-widget">
+                     
+                    <!--<label for="exampleInputPassword1">
+                        finish location
+                    </label> -->
+                    <input type="input" class="form-control" id="finish_location" placeholder="pilih tujuan">
+                    <input type="input" class="form-control" id="finish_location_name" placeholder="pilih tujuan">
+                    
+                </div>
 
-              <!--<input type="checkbox" name="add" id="addMarker" > Add Marker <br>
-              
-              <input type="checkbox" name="add" id="addLine" > Add Line <br>
-              --> 
-              <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
-              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br>
-              <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/update" method="POST" enctype="multipart/form-data">
-              {{csrf_field()}}
-                <table class="table">
-                  <tr hidden="hidden">
-                    <td ><label for="exampleInputPassword1">
-                          Route Id
-                      </label></td>
-                    <td><input type="input" name="route_id" id="route_id" class="form-control" ></td>
-                  </tr>
-                  <tr>
-                    <td><label for="exampleInputPassword1">
-                          No Trayek
-                      </label></td>
-                    <td><input type="input" name="namaTrayek" id="namaTrayek" class="form-control" placeholder="01"></td>
-                  </tr>     
-                  <tr >
-                    <td ><label for="exampleInputPassword1">
-                          Nama Trayek
-                      </label></td>
-                    <td><input type="input" name="trip_headsign" id="trip_headsign" class="form-control" placeholder="ciroyom - antapani"></td>
-                  </tr>
-                  <tr>
-                    <td><label for="exampleInputPassword1">
-                          route_color
-                        </label>
-                    </td>
-                    <td>
-                      <p>
-                      <div id="colorSelector">
-                        <!-- <button type="submit" class="btn btn-primary"  style="" >
-                          Change Color
-                        </button> -->
-                        <div id="colorText" style="height: 100%; width: 100%"> Changes Color </div>
-                        <input type="input" name="route_color" hidden="hidden" id="route_color">
-                      </div>
-                        <!-- <div id="colorSelector"><div style="background-color: #0000ff; z-index: 9999 "></div> </div> -->
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="exampleInputPassword1">
-                        Price
-                      </label>
-                    </td>
-                    <td>
-                    <div class="form-inline">
-                    <select id="fare_id" name="fare_id" class="form-control">
-                      @foreach ($fare_attributes as $data)
-                      <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
-                      @endforeach
-                    </select> <input type="input" id="price" class="form-control" >
-                    </td>
+                <!--<div id="loading" ><img class="img-responsive img-circle" alt="Cinque Terre" src="http://www.angkot.balaikota.info/public/images/loading.gif"> </div>-->
+                    
+                <div id="select_finish">
+                    <select class="form-control" name="select_finish" id="select_finish_select">
+                    <!--    <option disabled selected>---pilih---</option>  -->
+                       
+                    </select>
+                </div>
+
+                <br>
+                    
+       
+                <button type="submit" class="btn btn-primary" id="submit" ">
+                    Submit
+                </button>
+                <button type="submit" class="btn btn-primary" id="button_clear" >
+                    Clear
+                </button>
+                <!--<a href="#" id="reverse" class="btn btn-primary">reverse</a>-->
+                 <button type="submit" class="btn btn-primary" id="reverse" > Reverse </button>
+                <input type="checkbox" name="walk_route_check" id="walk_route_check" checked="checked"> use walk route ? <br>
+                <br>
+                <ul class="nav nav-tabs" id="tabs">
+                  <!--<li role="presentation" onchange=""  ><a href="#">profile </a></li>
+                  <li role="presentation" class="active"><a href="#"></a></li>
+                  <li role="presentation"><a href="#"></a></li> --> 
+                </ul>
+                <div class="tab-content clearfix" id="isiTabs">
+                    <div class="tab-pane active" id="1a">
+                      <!--<h3>Content's background color is the same for the tab</h3> -->
+                      <!--<div> Cek cek cek</div>-->
+                      <table  class="table" id="tableKet0">
+                        <!--<tr>
+                          <td align="center" width=20% > Gambar</td>
+                          <td align="center" width="100%"> Petunjuk </td>
+                        </tr>-->
+                      </table>
                     </div>
-                  </tr>
-                  <tr>
-                    <td><label for="exampleInputPassword1">
-                          Image
-                      </label></td>
-                    <td>
-                      <div id="image_place"></div>
-                      <input type="input" id="image" class="form-control" name="image">
-                      <label class="btn btn-default btn-file">
-                          Browse <input type="file" id="file" name="file" enctype="multipart/form-data" >
-                      </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="exampleInputPassword1">
-                          Shape_id
-                      </label></td>
-                    <td>
-                      <!-- <input type="input" id="shape_id" class="form-control" > -->
-                      <textarea id="shape_id" class="form-control" name="shape_id" ></textarea>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="exampleInputPassword1">
-                          Keterangan
-                      </label></td>
-                    <td>
-                      <!-- <input type="input" id="keterangan" class="form-control" > -->
-                      <textarea id="keterangan" class="form-control" name="keterangan" ></textarea>
-                    </td>
-                  </tr>
-                  
-                  <tr>
-                    <td></td>
-                    <td>
-                      <button type="button" class="btn btn-primary" id="button_clear" >
-                        Clear
-                      </button>
+                    <!--<div class="tab-pane" id="2a">
 
-                      <button type="submit" class="btn btn-primary" id="button_save" >
-                        Save
-                      </button>
-                    </td>
-                  </tr>
-                  
-                </table>
-              </form>
-          @yield('content') 
-            
+                        <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+                    </div>
+                    <div class="tab-pane" id="3a">
+
+                      <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+                    </div>
+                      <div class="tab-pane" id="4a">
+                      <h3>We use css to change the background color of the content to be equal to the tab</h3>
+                    </div>-->
+                </div>
+                
+                <div class="se-pre-con"></div>
+                <!--<div id="progressBar"></div>-->
+                <div class="myProgressBar" style="width: 64px;
+                  height: 64px;
+                  background: url(images/loader-64x/Preloader_3.gif) center no-repeat #fff;">
+                    
+                </div>
+                <div class="label label-info myProgressBar"> Hang on ... </div>
+
+                @yield('content')    
         </div>
            
         

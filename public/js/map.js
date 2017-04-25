@@ -2,7 +2,7 @@ var points = [];
 var koordinat = []; 
 var arrPolyline = [];
 var jalur;
-var walk_route = "no";
+var walk_route = "yes";
 var lokasi_awal;
 var lokasi_tujuan;
 var marker_intersection = [];
@@ -227,7 +227,7 @@ function initMap() {
     b = b.split(",");
     if( !isNaN(a[0]) && !isNaN(a[1]) && !isNaN(b[0]) && !isNaN(b[1]) ){
         
-      console.log("run jalan");
+      //console.log("run jalan");
       jalan($("#start_location").val(),$("#finish_location").val(), walk_route );
     }
     else if(!isNaN(a[0]) && !isNaN(a[1]) && isNaN(b[0]) && isNaN(b[1]) ) // angka & tulisan
@@ -379,7 +379,7 @@ function initMap() {
           //$("#select_routingresult_select").append('<option value="' + key + '">' + result[key].total_cost + '</option>' );  
           if(key == 0)
           {
-            $("#tabs").append('<li role="presentation" class="active" id="'+key+'"  ><a data-toggle="tab" href="#tabpane'+ key +'" >Rute '+ (Number(key)+1) +'  Rp. '+ result[key].total_cost  +' </a></li>');
+            $("#tabs").append('<li role="presentation" class="active" id="'+key+'"  ><a data-toggle="tab" href="#tabpane'+ key +'" >Rute '+ (Number(key)+1) +' : Rp. '+ result[key].total_cost  +' </a></li>');
             
             $("#isiTabs").append('<div class="tab-pane active" id="tabpane'+ key +'">'+                      
                         '<table  class="table" id="tableKet'+key+'">'+
@@ -422,7 +422,7 @@ function initMap() {
           }
           else
           {
-           $("#tabs").append('<li role="presentation" id="'+key+'"  ><a data-toggle="tab" href="#tabpane'+ key +'">Rute '+ (Number(key)+1) +' Rp. '+ result[key].total_cost  +' </a></li>');
+           $("#tabs").append('<li role="presentation" id="'+key+'"  ><a data-toggle="tab" href="#tabpane'+ key +'">Rute '+ (Number(key)+1) +' : Rp. '+ result[key].total_cost  +' </a></li>');
            $("#isiTabs").append('<div class="tab-pane" id="tabpane'+ key +'">'+                      
                         '<table  class="table" id="tableKet'+key+'">'+
                         '</table>'+
@@ -563,7 +563,7 @@ function initMap() {
         markerIcon = [];
         setMapOnAll(null);
         for (var i = 0; i < jalur.routingresult[0].step.length; i++) {
-          var tmpIcon = {url: iconBase+jalur.routingresult[0].step[i].angkot[0].image, scaledSize: new google.maps.Size(50, 40)}
+          var tmpIcon = {url: iconBase+jalur.routingresult[0].step[i].angkot[0].image, scaledSize: new google.maps.Size(48, 27)}
           if (i == 0) {
             var lat1 = Number( jalur.routingresult[0].step[i].jalur[0].lat ) ;
             var lng1 = Number(jalur.routingresult[0].step[i].jalur[0].lng) ;          
@@ -700,7 +700,7 @@ function initMap() {
     markerIcon = [];
     setMapOnAll(null);
     for (var i = 0; i < jalur.routingresult[index].step.length; i++) {
-      var tmpIcon = {url: iconBase+jalur.routingresult[index].step[i].angkot[0].image, scaledSize: new google.maps.Size(50, 40)} ;
+      var tmpIcon = {url: iconBase+jalur.routingresult[index].step[i].angkot[0].image, scaledSize: new google.maps.Size(48, 27)} ;
         if (i == 0) {
           var lat1 = Number( jalur.routingresult[index].step[i].jalur[0].lat ) ;
           var lng1 = Number(jalur.routingresult[index].step[i].jalur[0].lng) ;

@@ -927,7 +927,7 @@ class ApiController extends Controller
         $route_id = $_GET['route_id'];  
       }
       //$data = DB::select("select a.route_id, a.trip_headsign, a.trip_short_name, a.shape_id,a.ket, b.image, b.route_color from trips a inner join route b on a.route_id = b.route_id where a.route_id =".$route_id);
-      $data = DB::select("select trips.route_id,trip_short_name,shape_id, route.route_color,route.image,trips.ket,  fare_attributes.price from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where trips.route_id =".$route_id);
+      $data = DB::select("select trips.route_id,trip_short_name, trip_headsign ,shape_id, route.route_color,route.image,trips.ket,  fare_attributes.price, fare_rule.fare_id from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where trips.route_id =".$route_id);
       return $data;
     }
 

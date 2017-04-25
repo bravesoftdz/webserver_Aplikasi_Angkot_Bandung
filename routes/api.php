@@ -18,6 +18,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('/check', 'ApiControl@check');
+//Route::post('/upload', 'EditController@upload');
+Route::post('/get_fare_rule', 'ApiControl@get_fare_rule');
 
 Route::get('/trips/get_jalur_terdekat', 'ApiController@get_jalur_terdekat');
 Route::get('/get_jalur_terdekat_cepat_new', 'ApiController@get_jalur_terdekat_cepat_new');

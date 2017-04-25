@@ -18,6 +18,7 @@ var new_shapes = [];
 var last_shape_id = '';
 var arrShapeId = [];
 var map;
+var Polyline;
 
 function initMap() 
 {   
@@ -80,54 +81,135 @@ function initMap()
     $("#image").val('');
     $("#keterangan").val('');
     $("#shape_id").val('');
-    $("#image_place").empty();    
+    $("#image_place").empty();
+    $("#colorText").text('Change Color');
+    $("#trip_headsign").val('');    
 
   })
 
-  $("#button_save").on('click', function(){   
+  $("#file").on('change',function(){
+     //console.log( $("#file").val() );
+     var namaGambar = $("#file").val() ; 
+     namaGambar = namaGambar.split('fakepath\\');
+     $("#image").val('public/images/'+namaGambar[1] ) ;
+     $("#image_place").empty();
+     $("#image_place").append("<img class='img-responsive' src='"+ $("#file").val() +"'>");
+
+  });
+
+  $("#button_save").on('click', function(e){   
     //hapus isi textarea dulu
-    $("#query").empty();
-   
-    var temp = array_Line.getArray();
-    var temp2 = [];
-    new_shapes = [];
-    for (var i = 0; i < temp.length; i++) {
-      temp2[i] = temp[i].toUrlValue(6) ;
-      if(jQuery.inArray(temp2[i], new_shapes ) == -1 && tmp[i] !== '' ){
-         
-          new_shapes.push( [temp2[i] , array_shape_id[i][1] ] ) ;
+    e.preventDefault();
 
+    for (i in data){
+      var lat = points.getAt(i).lat();
+      var lng = points.getAt(i).lng()
+      data[i].shape_pt_lat = lat.toString();
+      data[i].shape_pt_lon = lng.toString() ;
+    }
+    console.log(data)
+
+    var objectData = {
+      '_token': $('meta[name=csrf-token]').attr('content'),
+      data: data
+    }
+    $.ajax({
+      type: "POST",
+      url: "http://localhost/webserverangkot/public/update_points",
+      data: objectData,
+      success: function(data){
+        console.log(data);
+      },
+      error:function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
         }
-    }
-
-    setMapOnAll(null);
-    del_polyline();
-    $('input[type=radio][name=add]').prop("checked", false);
-    $("#trips").empty();
-    //array_Line.clear();
-
-    for (var i = 0; i < new_shapes.length; i++) {
-      if(new_shapes[i][1] !== null ){
-        var shapes_id = new_shapes[i][1] ; //Number( last_shape_id ) + ( i+1 ) ;
-      }else{
-        var shape_id = Number( last_shape_id ) + ( i+1 ) ;
-      }
-      var tmp2 = new_shapes[i][0].split(",");
-      var lat = Number( tmp2[0] ) ;
-      var lng = Number( tmp2[1] ) ;
-      toBesorted.push( { lat:lat, lng:lng, shape_id:shapes_id } ) ;
-      var position = { lat:lat, lng:lng } ;
+    });
+    
+    /*
+      console.log("save clicked ");
+      var namaTrayek =  $("#namaTrayek").val(); ; 
+      var route_id = $("#route_id").val(); 
+      var route_color = $("#colorText").text()  ;
+      var price = $("#price").val();
+      var fare_id = $("#fare_id").val();
+      var image =  $("#image").val()  ; // path image
+      var file = document.getElementById('file'); //$("#file").val();//.attr('name');
+      //file = file.files;
+      var shape_id = $("#shape_id").val();
+      var keterangan = $("#keterangan").val();
+      var token = $('meta[name=csrf-token]').attr('content') ;
+      var dataObject = { '_token': token , namaTrayek: namaTrayek, route_id: route_id, route_color: route_color, price: price, fare_id: fare_id, image: image, file:file, shape_id: shape_id, keterangan: keterangan };
+    
+      var formdata = new FormData();
+      formdata.append('_token', token );
+      formdata.append('namaTrayek', namaTrayek );
+      formdata.append('route_id' , route_id );
+      formdata.append('route_color', route_color );
+      formdata.append('price', price );
+      formdata.append('fare_id', fare_id );
+      formdata.append('image', image );
+      formdata.append('file', file );
+      formdata.append('shape_id', shape_id );
+      formdata.append('keterangan', keterangan );
+       
+      // var frm = $("form");
+      // var formdata = new FormData(frm);
+      // console.log(formdata);  
       
-      make_marker( position, shapes_id );
-      var query  = "INSERT INTO shapes "+
-      " VALUES ('',"+shapes_id+","+lat+","+lng+",0,'','','') " // jalur dan place_info masih dikosongkan
-      $("#trips").append(shapes_id+", ");
-      $("#query").append(query+"<br>");
-    }
-
-    
-    
+      $.ajax({
+        type: "POST",
+        url: "http://localhost/webserverangkot/public/update",
+        contentType: false,
+        cache:false,
+        processData: false,
+        data: formdata,//JSON.stringify( dataObject ),
+        success: function(data){
+          alert("data terupdate " + data );
+          console.log(data);
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+             console.log(textStatus, errorThrown);
+          }
+      });
+      console.log(data);
+    */
   })
+
+  $(document).on('submit',"#form", function(){
+      /*$.ajax({
+      type: "GET",
+      url: "http://localhost/webserverangkot/public/update_points",
+      contentType: "application/json",
+      data: JSON.stringify( {data:data}),
+      success: function(data){
+        alert("data terupdate " + data );
+        console.log(data);
+      },
+      error:function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+      });*/
+      
+  });
+
+  $("#fare_id").on('change', function(){
+    var fare_id = $("#fare_id").val();
+    $.ajax({
+      type: "POST",
+      url: "http://localhost/webserverangkot/public/api/get_fare_rule",
+      data: "fare_id="+fare_id,
+      success: function(data){
+        //console.log(data);
+        data = data[0] ;
+        //console.log(data);
+        $("#price").val(data.price);
+      },
+      error:function(jqXHR, textStatus, errorThrown) {
+           alert(textStatus, errorThrown);
+        }
+    });
+  
+  });
 
   function setMapOnAll(gg) 
   {
@@ -182,6 +264,8 @@ function initMap()
     },
     onChange: function (hsb, hex, rgb) {
       $('#colorSelector div').css('backgroundColor', '#' + hex);
+      $('#colorText').text( '#' + hex);
+      $('#route_color').val('#' + hex );
     }
   });
     
@@ -331,18 +415,47 @@ function pilih_change(route_id = 1){
   
     }
   
-    var Polyline = new google.maps.Polyline({
+    Polyline = new google.maps.Polyline({
          path: points ,
          geodesic: true,
          strokeColor: angkot[0].route_color,
          strokeOpacity: 1.0,
          strokeWeight: 2,
-         editable:true,
-         draggable:true
+         editable:true
     });
     Polyline.setMap(map) ;
-    array_LinePath.push(Polyline);
-  
+    array_LinePath.push(Polyline); //tempat untuk hapus array
+    
+    /*var set_at  = function(){
+          for (var i = 0; i < this.getLength(); i++) {
+            var position = this.getAt(i).toUrlValue(6);
+            var urutan = i;
+            console.log(position, urutan);
+          }
+          
+          
+        }*/
+
+    // google.maps.event.addListener(Polyline.getPath() , "insert_at" , polylineChanged );
+    // google.maps.event.addListener(Polyline.getPath() , "remove_at" , polylineChanged );
+    var tmpposisi;
+    var urutan;
+    var tempData;
+    google.maps.event.clearListeners(Polyline.getPath() , "set_at");
+    google.maps.event.addListener(Polyline.getPath() , "set_at" , function(tmpposisi, urutan){
+      
+      function index(tmpposisi, urutan){
+        for (var i = 0; i < this.getLength(); i++)
+        { 
+          urutan = i;
+          //tmpposisi = this.getAt(urutan).toUrlValue(6);
+        }
+        
+      }
+      console.log(tmpposisi,urutan.toUrlValue(4), data[ Number( tmpposisi) ] );
+        
+    });
+
     for (var i = 0; i < data.length; i++) {
       var infowindow = new google.maps.InfoWindow();
       var content = data[i].shape_id;
@@ -360,12 +473,22 @@ function pilih_change(route_id = 1){
     $("#namaTrayek").val(""+angkot[0].trip_short_name);
     $("#route_id").val(""+angkot[0].route_id);
     $('#colorSelector div').css('backgroundColor', angkot[0].route_color );
+    $('#colorText').empty();
+    if(angkot[0].route_color == '' || angkot[0].route_color == null ){
+      angkot[0].route_color = 'Change Color';
+    }
+    $('#colorText').text(angkot[0].route_color);
+    
+    $('#route_color').empty();
+    $('#route_color').val(angkot[0].route_color);
     $("#price").val(""+angkot[0].price);
+    $("#fare_id").val(angkot[0].fare_id);
     $("#image").val(""+angkot[0].image);
     $("#keterangan").val(""+angkot[0].ket);
     $("#shape_id").val(""+angkot[0].shape_id);
     $("#image_place").empty();
     $("#image_place").append("<img class='img-responsive' src='http://localhost/webserverangkot/"+angkot[0].image+"'>")
+    $("#trip_headsign").val(angkot[0].trip_headsign);
     var bound =  new google.maps.LatLngBounds();
     for (var i = 0; i < pointsLokal.length; i++) {
       bound.extend(pointsLokal[i]);
@@ -383,11 +506,11 @@ function pilih_change(route_id = 1){
 
 function get_point(terima=1) {
  
-return  $.ajax({
-    url: "http://localhost/webserverangkot/public/api/trips/get_trayek_akbar", //host + "/dbangkot3/index.php/welcome/pilih_jalur_tampil" ,
-    method: "GET",
-    data: "kirim=" + terima
-  });
+  return  $.ajax({
+      url: "http://localhost/webserverangkot/public/api/trips/get_trayek_akbar", //host + "/dbangkot3/index.php/welcome/pilih_jalur_tampil" ,
+      method: "GET",
+      data: "kirim=" + terima
+    });
  
 }          
        

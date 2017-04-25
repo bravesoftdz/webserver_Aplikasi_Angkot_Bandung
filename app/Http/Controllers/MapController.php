@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\trip;
 use App\trip_new;
+use DB;
 class MapController extends Controller
 {
     /**
@@ -51,8 +52,9 @@ class MapController extends Controller
 
     public function edit()
     {    
-        $trip = trip::where("shape_id", "!=", "" )-> orderBy('trip_short_name')->get();   
-        return view('map.edit',compact('trip'));
+        $trip = trip::where("shape_id", "!=", "" )-> orderBy('trip_short_name')->get();
+        $fare_attributes = DB::select("select * from fare_attributes"); 
+        return view('map.edit',compact('trip', 'fare_attributes'));
         
     }
 

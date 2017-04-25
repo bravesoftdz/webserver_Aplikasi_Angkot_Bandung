@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\trip;
+use App\trip; 
 use App\trip_new;
 use App\shape;
 use App\shapes_new;
@@ -100,9 +100,9 @@ class ApiControl extends Controller
       for ($i=0; $i < sizeof($data) ; $i++) 
       {     
         $hai = $data[$i]->shape_id;
-        $trip2 = DB::select("select trips.route_id,trip_short_name,shape_id, route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id like '% ".$hai.",%' union 
-                select trips.route_id,trip_short_name,shape_id,route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id = ".$hai." union
-                select trips.route_id,trip_short_name,shape_id,route.route_color,  fare_attributes.price,route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id like '% ".$hai."' ");
+        $trip2 = DB::select("select trips.route_id,trip_short_name, trip_headsign,shape_id, route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id like '% ".$hai.",%' union 
+                select trips.route_id,trip_short_name, trip_headsign,shape_id,route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id = ".$hai." union
+                select trips.route_id,trip_short_name, trip_headsign,shape_id,route.route_color,  fare_attributes.price,route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id where shape_id like '% ".$hai."' ");
         //DB::select("select * from trips where shape_id like '% ".$hai.",%' union select * from trips where shape_id = ".$hai." union select * from trips where shape_id like '% ".$hai."' ");
 
        
@@ -461,7 +461,7 @@ class ApiControl extends Controller
     return $data[0]->shape_id;
   }
 
-  public function cetak_jalur($start="-6.897286083979936,107.64301300048828", $finish="-6.900524035220587,107.5980377197265", $walk_route='no')
+  public function cetak_jalur($start="-6.897286083979936,107.64301300048828", $finish="-6.900524035220587,107.5980377197265", $walk_route='yes')
   {
     if(empty($_GET['walk_route']))
     {
@@ -605,7 +605,7 @@ class ApiControl extends Controller
         else
         {
 
-          $walking_path = $this->get_walking_route($titik_terdekat, $finish_position);
+          $walking_path = $this->get_walking_route($titik_terdekat_finish, $finish_position);
         }
         
         $step[] = [ "angkot"=>[ $jlnkaki ], "jalur"=> [ $titik_terdekat_finish, $finish_position  , $walking_path ] ];
@@ -662,14 +662,30 @@ class ApiControl extends Controller
             {
               $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
               //$temp = substr($value['angkot'][0]->price, -2);
-              $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+              $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+              if(substr( $value['angkot'][0]->price , -3) < 499 )
+              {
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+              }
+              else
+              {
+                $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+              }                  
             }
-            elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 1/3 pertama
+            elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
             {
               # code...
               $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
               //$temp = substr($value['angkot'][0]->price, -2);
-              $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+              $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+              if(substr( $value['angkot'][0]->price , -3) < 499 )
+              {
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+              }
+              else
+              {
+                $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+              }                  
             }
             else
             {
@@ -756,7 +772,7 @@ class ApiControl extends Controller
                     $jarak = $routingresult[$i]['step'][$j]['distance'];
                     $jarak = explode(".", $jarak);
                     //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                   }
                   else
                   {
@@ -772,7 +788,7 @@ class ApiControl extends Controller
                     $jarak = $routingresult[$i]['step'][$j]['distance'];
                     $jarak = explode(".", $jarak);
                     //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                   }
               }
               else
@@ -783,7 +799,7 @@ class ApiControl extends Controller
                 $jarak = $routingresult[$i]['step'][$j]['distance'];
                 $jarak = explode(".", $jarak);
                 //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]."dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
               }
             }
             else if($j == sizeof($routingresult[$i]['step'])-1 )
@@ -810,7 +826,7 @@ class ApiControl extends Controller
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak);
                   //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                 }
                 else
                 {
@@ -829,7 +845,7 @@ class ApiControl extends Controller
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak); 
                   //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                 }
              }
              else
@@ -843,7 +859,8 @@ class ApiControl extends Controller
                   $jarak = explode(".", $jarak);
 
                   //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                  //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
 
              }
             }
@@ -871,10 +888,11 @@ class ApiControl extends Controller
 
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak);
+                  $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
     
-                  $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
-                  
-                  $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
+                  //$angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                  $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name .". ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign ;
+                  $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
               }
               else
               {
@@ -894,10 +912,12 @@ class ApiControl extends Controller
                 $jarak = $routingresult[$i]['step'][$j]['distance'];
                 $jarak = explode(".", $jarak);
 
-                $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
+
+                $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ." ( ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign." )" ;
                 //$routingresult[$i]['step'][$j]['ket'] = "take angkot ".$angkot." from ".$naik[0]." to ".$turun[0] ;
                 //$routingresult[$i]['step'][$j]['ket'] = "Naik angkot <strong>".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
-                $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
+                $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot No.".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
               }
             }
 
@@ -997,8 +1017,8 @@ class ApiControl extends Controller
         //return $intersection_shape_id_numeric; #shapeid yang berintersection
         //pemindahan array associative ke array numeric
         if(empty($no_intersec)){
-
-          goto tigaAngkot;
+          return ['status'=>'Bad', 'note'=>'tidak ditemukan angkot untuk jalur ini']; 
+          //goto tigaAngkot;
         } 
         foreach ($no_intersec as $key => $value) {
           # code...
@@ -1115,6 +1135,7 @@ class ApiControl extends Controller
           //manipulating price inside angkot.
           foreach ($step as $key => $value) {
             # code...
+            
             if($value['angkot'][0]->price == 0)
             {
               continue;
@@ -1132,14 +1153,30 @@ class ApiControl extends Controller
               {
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
                 //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
               }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 1/3 pertama
+              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
               {
                 # code...
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
                 //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
               }
               else
               {
@@ -1147,6 +1184,7 @@ class ApiControl extends Controller
               }
             
             }
+
           }
 
           //Coding untuk logika harga
@@ -1261,6 +1299,7 @@ class ApiControl extends Controller
           //manipulating price inside angkot.
           foreach ($step as $key => $value) {
             # code...
+            
             if($value['angkot'][0]->price == 0)
             {
               continue;
@@ -1278,14 +1317,30 @@ class ApiControl extends Controller
               {
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
                 //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
               }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 1/3 pertama
+              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
               {
                 # code...
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
                 //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
               }
               else
               {
@@ -1293,6 +1348,7 @@ class ApiControl extends Controller
               }
             
             }
+
           }
 
           //Coding untuk logika harga
@@ -1391,18 +1447,20 @@ class ApiControl extends Controller
                     $param1 = $a->lat .",". $a->lng;
                     $param2 = $b->lat .",". $b->lng;
                     $turun = $this->getLocInfo($param2);
+
                     $turun = $turun->results[0]->formatted_address;
+                    
                     $turun = explode(", ", $turun);
                     $jarak = $routingresult[$i]['step'][$j]['distance'];
                     $jarak = explode(".", $jarak);
                     //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                   }
                   else
                   {
                     if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
-                                  continue;
-                                }
+                      continue;
+                    }
                 
                     $param1 = $a->lat .",". $a->lng;
                     $param2 = $b->lat .",". $b->lng;
@@ -1412,7 +1470,7 @@ class ApiControl extends Controller
                     $jarak = $routingresult[$i]['step'][$j]['distance'];
                     $jarak = explode(".", $jarak);
                     //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                   }
               }
               else
@@ -1423,7 +1481,7 @@ class ApiControl extends Controller
                 $jarak = $routingresult[$i]['step'][$j]['distance'];
                 $jarak = explode(".", $jarak);
                 //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]."dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
               }
             }
             else if($j == sizeof($routingresult[$i]['step'])-1 )
@@ -1450,7 +1508,7 @@ class ApiControl extends Controller
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak);
                   //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                 }
                 else
                 {
@@ -1469,7 +1527,7 @@ class ApiControl extends Controller
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak); 
                   //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                 }
              }
              else
@@ -1483,7 +1541,8 @@ class ApiControl extends Controller
                   $jarak = explode(".", $jarak);
 
                   //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                  //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
 
              }
             }
@@ -1506,13 +1565,16 @@ class ApiControl extends Controller
                   $turun = $turun->results[0]->formatted_address;
                   $naik = explode(", ", $naik);
                   $turun = explode(", ", $turun);
-    
+                  
+
+
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak);
+                  $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
     
-                  $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
-                  //$routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
-                  $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
+                  //$angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                  $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name .". ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign ;
+                  $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
               }
               else
               {
@@ -1532,10 +1594,12 @@ class ApiControl extends Controller
                 $jarak = $routingresult[$i]['step'][$j]['distance'];
                 $jarak = explode(".", $jarak);
 
-                $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
+
+                $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ." ( ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign." )" ;
                 //$routingresult[$i]['step'][$j]['ket'] = "take angkot ".$angkot." from ".$naik[0]." to ".$turun[0] ;
                 //$routingresult[$i]['step'][$j]['ket'] = "Naik angkot <strong>".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
-                $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
+                $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot No.".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
               }
             }
 
@@ -1548,7 +1612,7 @@ class ApiControl extends Controller
       {
          tigaAngkot:
          //ambil all angkot.
-          $all_angkot = DB::select("select trips.route_id,trip_short_name,shape_id, route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id");
+          $all_angkot = DB::select("select trips.route_id,trip_short_name,trip_headsign,shape_id, route.route_color,  fare_attributes.price, route.image from trips left join route on trips.route_id = route.route_id left join fare_rule on trips.route_id = fare_rule.route_id left join fare_attributes on fare_rule.fare_id = fare_attributes.fare_id");
           
           //deklarasi shape_id $all_angkot,
           for ($i=0; $i < sizeof($all_angkot) ; $i++) { 
@@ -1912,7 +1976,7 @@ class ApiControl extends Controller
                   $index[$i] = $tmpindex ;
                   $tmpindex = []; 
                 }*/
-                return $new_reverse_unduplicated ; 
+                //return $new_reverse_unduplicated ; 
                 //2return $index;
                 foreach ($index as $i => $value) {
                    
@@ -2182,6 +2246,7 @@ class ApiControl extends Controller
                   //manipulating price  inside angkot.
                   foreach ($step as $key => $value) {
                     # code...
+                    
                     if($value['angkot'][0]->price == 0)
                     {
                       continue;
@@ -2199,14 +2264,30 @@ class ApiControl extends Controller
                       {
                         $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
                         //$temp = substr($value['angkot'][0]->price, -2);
-                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                        if(substr( $value['angkot'][0]->price , -3) < 499 )
+                        {
+                          $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                        }
+                        else
+                        {
+                          $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                        }                  
                       }
-                      elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 1/3 pertama
+                      elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
                       {
                         # code...
                         $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
                         //$temp = substr($value['angkot'][0]->price, -2);
-                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                        if(substr( $value['angkot'][0]->price , -3) < 499 )
+                        {
+                          $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                        }
+                        else
+                        {
+                          $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                        }                  
                       }
                       else
                       {
@@ -2215,7 +2296,7 @@ class ApiControl extends Controller
                     
                     }
 
-                  }// 
+                  }
 
                   //coding total harga
                   $total_cost = 0;
@@ -2369,6 +2450,7 @@ class ApiControl extends Controller
                   //manipulating price  inside angkot.
                   foreach ($step as $key => $value) {
                     # code...
+                    
                     if($value['angkot'][0]->price == 0)
                     {
                       continue;
@@ -2386,14 +2468,30 @@ class ApiControl extends Controller
                       {
                         $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
                         //$temp = substr($value['angkot'][0]->price, -2);
-                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                        if(substr( $value['angkot'][0]->price , -3) < 499 )
+                        {
+                          $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                        }
+                        else
+                        {
+                          $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                        }                  
                       }
-                      elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 1/3 pertama
+                      elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
                       {
                         # code...
                         $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
                         //$temp = substr($value['angkot'][0]->price, -2);
-                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);                  
+                        $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                        if(substr( $value['angkot'][0]->price , -3) < 499 )
+                        {
+                          $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                        }
+                        else
+                        {
+                          $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                        }                  
                       }
                       else
                       {
@@ -2402,7 +2500,7 @@ class ApiControl extends Controller
                     
                     }
 
-                  }// */
+                  }
 
                   //coding total harga
                   $total_cost = 0;
@@ -2469,7 +2567,6 @@ class ApiControl extends Controller
 
                 //return $routingresult;
                 //penambahan logika ket //peenambahan keterangan
-                
                 foreach ($routingresult as $i => $value) {
                   # code...
                   foreach ($routingresult[$i]['step'] as $j => $value) {
@@ -2489,18 +2586,20 @@ class ApiControl extends Controller
                             $param1 = $a->lat .",". $a->lng;
                             $param2 = $b->lat .",". $b->lng;
                             $turun = $this->getLocInfo($param2);
+
                             $turun = $turun->results[0]->formatted_address;
+                            
                             $turun = explode(", ", $turun);
                             $jarak = $routingresult[$i]['step'][$j]['distance'];
                             $jarak = explode(".", $jarak);
                             //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]."dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                           }
                           else
                           {
                             if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
-                                          continue;
-                                        }
+                              continue;
+                            }
                         
                             $param1 = $a->lat .",". $a->lng;
                             $param2 = $b->lat .",". $b->lng;
@@ -2510,7 +2609,7 @@ class ApiControl extends Controller
                             $jarak = $routingresult[$i]['step'][$j]['distance'];
                             $jarak = explode(".", $jarak);
                             //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]."dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                           }
                       }
                       else
@@ -2521,7 +2620,7 @@ class ApiControl extends Controller
                         $jarak = $routingresult[$i]['step'][$j]['distance'];
                         $jarak = explode(".", $jarak);
                         //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
-                        $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]."dari posisi anda menuju <strong>".$turun[0]."</strong>";
+                        $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh ".$jarak[0]." meter dari posisi anda menuju <strong>".$turun[0]."</strong>.";
                       }
                     }
                     else if($j == sizeof($routingresult[$i]['step'])-1 )
@@ -2548,7 +2647,7 @@ class ApiControl extends Controller
                           $jarak = $routingresult[$i]['step'][$j]['distance'];
                           $jarak = explode(".", $jarak);
                           //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                         }
                         else
                         {
@@ -2567,7 +2666,7 @@ class ApiControl extends Controller
                           $jarak = $routingresult[$i]['step'][$j]['distance'];
                           $jarak = explode(".", $jarak); 
                           //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda";
+                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
                         }
                      }
                      else
@@ -2581,7 +2680,8 @@ class ApiControl extends Controller
                           $jarak = explode(".", $jarak);
 
                           //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                          $routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                          //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]."</strong> meter sampai tujuan anda.";
 
                      }
                     }
@@ -2604,14 +2704,17 @@ class ApiControl extends Controller
                           $turun = $turun->results[0]->formatted_address;
                           $naik = explode(", ", $naik);
                           $turun = explode(", ", $turun);
-            
+                          
+
+
                           $jarak = $routingresult[$i]['step'][$j]['distance'];
                           $jarak = explode(".", $jarak);
+                          $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
             
-                          $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
-                          //$routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
-                          $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
-                        }
+                          //$angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                          $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name .". ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign ;
+                          $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
+                      }
                       else
                       {
                         if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) )
@@ -2630,10 +2733,12 @@ class ApiControl extends Controller
                         $jarak = $routingresult[$i]['step'][$j]['distance'];
                         $jarak = explode(".", $jarak);
 
-                        $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                        $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
+
+                        $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ." ( ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign." )" ;
                         //$routingresult[$i]['step'][$j]['ket'] = "take angkot ".$angkot." from ".$naik[0]." to ".$turun[0] ;
                         //$routingresult[$i]['step'][$j]['ket'] = "Naik angkot <strong>".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
-                        $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong>" ;
+                        $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot No.".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* biasanya ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i>" ;
                       }
                     }
 
@@ -2746,6 +2851,13 @@ class ApiControl extends Controller
     }
   }
 
+  public function get_fare_rule(Request $request){
+    //$fare_id = $_POST['fare_id'];
+    $fare_id = $request->fare_id;
+    $data = DB::select('select price from fare_attributes where fare_id='.$fare_id);  
+    return $data;
+  }
+
   //for checking
   public function all_angkot()
   {
@@ -2765,7 +2877,7 @@ class ApiControl extends Controller
                          ->get();
     return $data_shapesA;
   }
-
+  //for checking
   public function check()
   {
     ini_set('max_execution_time', 300);
@@ -2845,7 +2957,7 @@ class ApiControl extends Controller
     
     
   }
-
+  //for checking
   public function check2()
   {
     ini_set('max_execution_time', 300);
@@ -2916,11 +3028,9 @@ class ApiControl extends Controller
       
 
     }
-
-    
-    
   }  
 
+  
   
 
 
