@@ -461,7 +461,7 @@ function pilih_change(route_id = 1){
 
     google.maps.event.addListener(Polyline.getPath() , "insert_at" , function(urutan){
 
-      function index(tmpposisi, urutan){
+      function index(urutan){
         for (var i = 0; i < this.getLength(); i++)
         { 
           urutan = i;
@@ -485,20 +485,22 @@ function pilih_change(route_id = 1){
               
     });
 
+    google.maps.event.addListener(Polyline.getPath() , "remove_at" , function(urutan){
+
+      function index(urutan){
+        for (var i = 0; i < this.getLength(); i++)
+        { 
+          urutan = i;
+        }
+        
+      }
+      console.log(urutan);
+      data.splice(urutan, 1);
+      
+              
+    });
     
 
-    /*for (var i = 0; i < data.length; i++) {
-      var infowindow = new google.maps.InfoWindow();
-      var content = data[i].shape_id;
-      google.maps.event.addListener(points.getAt(i),'click', (function(points,content,infowindow){ 
-              return function() {
-                  infowindow.setContent(""+content);
-                  infowindow.open(map,this);
-                  //console.log( this );
-              };
-        })(points.getAt(i),content,infowindow));
-  
-    }*/
 
     //Isi form dengan data angkot
     $("#namaTrayek").val(""+angkot[0].trip_short_name);
