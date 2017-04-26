@@ -244,26 +244,26 @@ class ApiControl extends Controller
 
   public function get_distance_route($route_id = 1)
   {
-    $data = $this->get_trayek($route_id);
-   // return $data
-    foreach ($data as $j => $value) 
-    {
-      
-      if(!isset($data[$j]->lat) || !isset($data[$j]->lng) )
-        {continue;}
-      $lat1 = (float) $data[$j]->lat  ;
-      $lng1 = (float) $data[$j]->lng  ;
-      //return [$lat1,$lng1];
-      if(!isset($data[$j+1]) || !isset($data[$j+1]) )
-        {continue;}
-      $lat2 = (float) $data[$j+1]->lat;
-      $lng2 = (float) $data[$j+1]->lng;
-      
-      $jarak[] =  $this->distanceTo($lat1,$lng1,$lat2,$lng2);
+      $data = $this->get_trayek($route_id);
+      // return $data
+      foreach ($data as $j => $value) 
+      {
+        
+        if(!isset($data[$j]->lat) || !isset($data[$j]->lng) )
+          {continue;}
+        $lat1 = (float) $data[$j]->lat  ;
+        $lng1 = (float) $data[$j]->lng  ;
+        //return [$lat1,$lng1];
+        if(!isset($data[$j+1]) || !isset($data[$j+1]) )
+          {continue;}
+        $lat2 = (float) $data[$j+1]->lat;
+        $lng2 = (float) $data[$j+1]->lng;
+        
+        $jarak[] =  $this->distanceTo($lat1,$lng1,$lat2,$lng2);
 
 
-    }
-    return array_sum( $jarak );
+      }
+      return array_sum( $jarak );
   }
 
   public function get_walking_route($awal='gedung sate', $akhir='gasibu')
@@ -457,8 +457,8 @@ class ApiControl extends Controller
 
   public function get_last_shapes_id()
   {
-    $data = shape::select('shape_id')->orderby('shape_id', 'DESC')->get();
-    return $data[0]->shape_id;
+    $data = shape::select(['shape_id','id'])->orderby('shape_id', 'DESC')->get();
+    return $data[0];
   }
 
   public function cetak_jalur($start="-6.897286083979936,107.64301300048828", $finish="-6.900524035220587,107.5980377197265", $walk_route='yes')
@@ -980,7 +980,7 @@ class ApiControl extends Controller
           $intersection_shape_id_numeric[] = $a;
         }
 
-        // return [$intersection_shape_id_numeric, $no_intersec];
+        // return ['no_intersec'=>$no_intersec , '$intersection_shape_id_numeric[$key]'=> $intersection_shape_id_numeric, 'angkot_start'=>$gabung_start, 'angkot_finish'=>$gabung_finish ];
 
         //hapus yang salah jalur, dari angkot pertama
         foreach ($no_intersec as $key => $value) {
@@ -1017,6 +1017,7 @@ class ApiControl extends Controller
         //return $intersection_shape_id_numeric; #shapeid yang berintersection
         //pemindahan array associative ke array numeric
         if(empty($no_intersec)){
+          
           return ['status'=>'Bad', 'note'=>'tidak ditemukan angkot untuk jalur ini']; 
           //goto tigaAngkot;
         } 

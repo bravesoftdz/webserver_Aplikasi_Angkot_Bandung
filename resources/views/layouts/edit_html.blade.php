@@ -266,7 +266,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4" style="" >
+        <div class="col-md-4 pre-scrollable" style="max-height: 550px" >
 
 
               <label for="exampleInputEmail1">
@@ -275,7 +275,7 @@
               <select class="form-control" id="pilih" name="pilih">
               <option value=99> All </option>
               <?php foreach ($trip as $a): ?>
-              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name']; ?> </option>  
+              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
               <?php endforeach ?> 
               </select>
 
@@ -283,8 +283,9 @@
               
               <input type="checkbox" name="add" id="addLine" > Add Line <br>
               --> 
-              <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
-              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br>
+              <!-- <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
+              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br> -->
+              <br>
               <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/update" method="POST" enctype="multipart/form-data">
               {{csrf_field()}}
                 <table class="table">

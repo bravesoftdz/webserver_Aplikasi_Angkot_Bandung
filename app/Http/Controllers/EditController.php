@@ -67,14 +67,28 @@ class EditController extends Controller
 
     public function update_points(Request $request){
       $data = $request->data;
+
       if(!empty($data)){
+
         foreach ($data as $key => $value) {
           # code...
-          //DB::select("UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon']."' where shape_id ='".$value['shape_id']."'");
-          $result[] = "UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon']."' where shape_id ='".$value['shape_id']."'";
+          //DB::select("UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon'] ."' where shape_id ='".$value['shape_id']."'");
+          $gabungShapeId[] = $value['shape_id'];
+          if( $value['id'] == '' ){
+            DB::select("INSERT INTO shapes value ('','".$value['shape_id']."','".$value['shape_pt_lat']."','".$value['shape_pt_lon']."','0','','','')");
+            //$result[] = "INSERT INTO shapes value ('','".$value['shape_id']."','".$value['shape_pt_lat']."','".$value['shape_pt_lon']."','0','','','')";
+          }
+          else
+          {
+
+            DB::select("UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon'] ."' where shape_id ='".$value['shape_id']."'");
+            //$result[] = "UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon']."' where shape_id ='".$value['shape_id']."'";
+          }
         }
-  
-        return $result;
+
+        $implode = implode(", ", $gabungShapeId ) ;
+        DB::select("UPDATE trips SET shape_id = '".$implode."' where route_id ='".$route_id."' ");
+        return 'Ok';
       }
       else
       {

@@ -19,6 +19,8 @@ var last_shape_id = '';
 var arrShapeId = [];
 var map;
 var Polyline;
+var last_id;
+var hasAddListener = false;
 
 function initMap() 
 {   
@@ -64,7 +66,7 @@ function initMap()
     $("#textarea").val('');
     $('input[type=radio][name=add]').prop("checked", false);
     addMarker = [];
-
+    hasAddListener = false;
     new_shapes = [] ;
     array_Line.clear();  //new google.maps.MVCArray() ;
     array_shape_id = [];
@@ -99,7 +101,12 @@ function initMap()
 
   $("#button_save").on('click', function(e){   
     //hapus isi textarea dulu
-    e.preventDefault();
+    // e.preventDefault();
+    if($("#route_id").val() == '')
+    {
+      alert('pilih trayek angkot dulu ');
+      return ;
+    }
 
     for (i in data){
       var lat = points.getAt(i).lat();
@@ -107,11 +114,11 @@ function initMap()
       data[i].shape_pt_lat = lat.toString();
       data[i].shape_pt_lon = lng.toString() ;
     }
-    console.log(data)
 
     var objectData = {
       '_token': $('meta[name=csrf-token]').attr('content'),
-      data: data
+      data: data,
+      route_id: $("#route_id").val()
     }
     $.ajax({
       type: "POST",
@@ -175,22 +182,7 @@ function initMap()
     */
   })
 
-  $(document).on('submit',"#form", function(){
-      /*$.ajax({
-      type: "GET",
-      url: "http://localhost/webserverangkot/public/update_points",
-      contentType: "application/json",
-      data: JSON.stringify( {data:data}),
-      success: function(data){
-        alert("data terupdate " + data );
-        console.log(data);
-      },
-      error:function(jqXHR, textStatus, errorThrown) {
-           console.log(textStatus, errorThrown);
-        }
-      });*/
-      
-  });
+  
 
   $("#fare_id").on('change', function(){
     var fare_id = $("#fare_id").val();
@@ -280,7 +272,10 @@ $(window).load(function() {
   });
 
   $.when(last_shape_id).done( function(){
-    last_shape_id = last_shape_id.responseText ;
+    last_shape_id = last_shape_id.responseJSON ;
+    last_id = last_shape_id.id;
+    last_shape_id = last_shape_id.shape_id;
+    
     $(".se-pre-con").fadeOut("slow");
   });
 
@@ -389,9 +384,20 @@ function pilih_change(route_id = 1){
   
   data = get_point(route_id);
   angkot = get_angkot( route_id );
+  for (var i = 0; i < array_LinePath.length; i++) {
+      array_LinePath[i].setMap(null);
+    }
+
+  if(hasAddListener == true){
+    google.maps.event.clearListeners(Polyline.getPath() , "set_at");
+    google.maps.event.clearListeners(Polyline.getPath() , "insert_at");
+    google.maps.event.clearListeners(Polyline.getPath() , "remove_at");
+  }
+
+
   $.when(data, angkot).done( function()
   { 
-    console.log(data);
+    
     data = data.responseJSON ;
     angkot = angkot.responseJSON ;
     var icons = {
@@ -426,25 +432,18 @@ function pilih_change(route_id = 1){
     Polyline.setMap(map) ;
     array_LinePath.push(Polyline); //tempat untuk hapus array
     
-    /*var set_at  = function(){
-          for (var i = 0; i < this.getLength(); i++) {
-            var position = this.getAt(i).toUrlValue(6);
-            var urutan = i;
-            console.log(position, urutan);
-          }
-          
-          
-        }*/
-
-    // google.maps.event.addListener(Polyline.getPath() , "insert_at" , polylineChanged );
-    // google.maps.event.addListener(Polyline.getPath() , "remove_at" , polylineChanged );
     var tmpposisi;
     var urutan;
     var tempData;
     google.maps.event.clearListeners(Polyline.getPath() , "set_at");
-    google.maps.event.addListener(Polyline.getPath() , "set_at" , function(tmpposisi, urutan){
+    google.maps.event.clearListeners(Polyline.getPath() , "insert_at");
+    google.maps.event.clearListeners(Polyline.getPath() , "remove_at");
+    
+    hasAddListener = true; // sudah punya add listener
+    
+    google.maps.event.addListener(Polyline.getPath() , "set_at" , function( urutan){
       
-      function index(tmpposisi, urutan){
+      function index(urutan){
         for (var i = 0; i < this.getLength(); i++)
         { 
           urutan = i;
@@ -452,11 +451,43 @@ function pilih_change(route_id = 1){
         }
         
       }
-      console.log(tmpposisi,urutan.toUrlValue(4), data[ Number( tmpposisi) ] );
+      //console.log(tmpposisi,urutan.toUrlValue(4), data[ Number( tmpposisi) ] );
+      console.log(urutan);
+      data[urutan].shape_pt_lat = points.getAt(urutan).lat();
+      data[urutan].shape_pt_lon = points.getAt(urutan).lng();
+      
         
     });
 
-    for (var i = 0; i < data.length; i++) {
+    google.maps.event.addListener(Polyline.getPath() , "insert_at" , function(urutan){
+
+      function index(tmpposisi, urutan){
+        for (var i = 0; i < this.getLength(); i++)
+        { 
+          urutan = i;
+        }
+        
+      }
+      console.log(urutan);
+      last_shape_id = ++last_shape_id;
+      var item = {
+        id: '', // id gausah di set, auto increment
+        jalur:'',
+        place_info:'',
+        shape_dist_travel:'',
+        shape_id: last_shape_id,
+        shape_pt_lat: points.getAt(urutan).lat(),
+        shape_pt_lon: points.getAt(urutan).lng(),
+        shape_pt_sequence: 0
+      } ;
+      data.splice(urutan, 0, item);
+      
+              
+    });
+
+    
+
+    /*for (var i = 0; i < data.length; i++) {
       var infowindow = new google.maps.InfoWindow();
       var content = data[i].shape_id;
       google.maps.event.addListener(points.getAt(i),'click', (function(points,content,infowindow){ 
@@ -467,7 +498,7 @@ function pilih_change(route_id = 1){
               };
         })(points.getAt(i),content,infowindow));
   
-    }
+    }*/
 
     //Isi form dengan data angkot
     $("#namaTrayek").val(""+angkot[0].trip_short_name);

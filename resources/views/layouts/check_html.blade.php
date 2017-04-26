@@ -281,7 +281,7 @@
               </label>
               <select class="form-control" id="pilih" name="pilih">
               <?php foreach ($trip as $a): ?>
-              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name']; ?> </option>  
+              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
               <?php endforeach ?> 
               </select>
               <br>
@@ -290,7 +290,7 @@
               </label>
               <select class="form-control" id="pilih2" name="pilih">
               <?php foreach ($trip as $a): ?>
-              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name']; ?> </option>  
+              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
               <?php endforeach ?> 
               </select>
               <br>
