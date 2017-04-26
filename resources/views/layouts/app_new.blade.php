@@ -236,7 +236,27 @@
                 <li class="active"><a href="http://localhost/webserverangkot/public/">Cari Jalur Angkot<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
 
                 <li><a href="http://localhost/webserverangkot/public/trayek">Info Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
-                
+
+                @if (!Auth::guest())
+                  <li>
+                    <a href="http://localhost/webserverangkot/public/edit">Edit Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-pencil"></span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                      <a href="{{ url('/logout') }}"
+                          onclick="event.preventDefault();
+                                   document.getElementById('logout-form').submit();">
+                          Logout
+                      </a>
+
+                      <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                          {{ csrf_field() }}
+                      </form>
+                  </li>
+                  
+                @endif
+              </ul>
             </div>
         </div>
     </nav>
