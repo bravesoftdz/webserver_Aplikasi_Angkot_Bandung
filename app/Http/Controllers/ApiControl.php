@@ -461,6 +461,12 @@ class ApiControl extends Controller
     return $data[0];
   }
 
+  public function get_last_route_id()
+  {
+    $data = trip::select(['route_id'])->orderby('route_id', 'DESC')->get();
+    return $data[0];
+  }
+
   public function cetak_jalur($start="-6.897286083979936,107.64301300048828", $finish="-6.900524035220587,107.5980377197265", $walk_route='yes')
   {
     if(empty($_GET['walk_route']))

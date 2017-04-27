@@ -45,8 +45,9 @@ class MapController extends Controller
 
     public function input()
     {    
-        $trip = trip::where("shape_id", "!=", "" )-> orderBy('trip_short_name')->get();   
-        return view('map.input',compact('trip'));
+        $trip = trip::where("shape_id", "!=", "" )-> orderBy('trip_short_name')->get();
+        $fare_attributes = DB::select("select * from fare_attributes");    
+        return view('map.input',compact('trip','fare_attributes'));
         //return view("map.trayek");
     }
 

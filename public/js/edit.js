@@ -50,7 +50,7 @@ function initMap()
       }
   })
 
-   
+  $("#navbar").hover( function(){$("#navbar").fadeIn();}, function(){$("#navbar").fadeOut();} );
 
   $("#pilih").on("change", function(){
     var select_pilih = $("#pilih").val();
@@ -132,54 +132,7 @@ function initMap()
         }
     });
     
-    /*
-      console.log("save clicked ");
-      var namaTrayek =  $("#namaTrayek").val(); ; 
-      var route_id = $("#route_id").val(); 
-      var route_color = $("#colorText").text()  ;
-      var price = $("#price").val();
-      var fare_id = $("#fare_id").val();
-      var image =  $("#image").val()  ; // path image
-      var file = document.getElementById('file'); //$("#file").val();//.attr('name');
-      //file = file.files;
-      var shape_id = $("#shape_id").val();
-      var keterangan = $("#keterangan").val();
-      var token = $('meta[name=csrf-token]').attr('content') ;
-      var dataObject = { '_token': token , namaTrayek: namaTrayek, route_id: route_id, route_color: route_color, price: price, fare_id: fare_id, image: image, file:file, shape_id: shape_id, keterangan: keterangan };
     
-      var formdata = new FormData();
-      formdata.append('_token', token );
-      formdata.append('namaTrayek', namaTrayek );
-      formdata.append('route_id' , route_id );
-      formdata.append('route_color', route_color );
-      formdata.append('price', price );
-      formdata.append('fare_id', fare_id );
-      formdata.append('image', image );
-      formdata.append('file', file );
-      formdata.append('shape_id', shape_id );
-      formdata.append('keterangan', keterangan );
-       
-      // var frm = $("form");
-      // var formdata = new FormData(frm);
-      // console.log(formdata);  
-      
-      $.ajax({
-        type: "POST",
-        url: "http://localhost/webserverangkot/public/update",
-        contentType: false,
-        cache:false,
-        processData: false,
-        data: formdata,//JSON.stringify( dataObject ),
-        success: function(data){
-          alert("data terupdate " + data );
-          console.log(data);
-        },
-        error:function(jqXHR, textStatus, errorThrown) {
-             console.log(textStatus, errorThrown);
-          }
-      });
-      console.log(data);
-    */
   })
 
   

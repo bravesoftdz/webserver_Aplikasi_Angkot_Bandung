@@ -8,6 +8,8 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script type="text/javascript" src="js/colorpicker.js"></script>
+<link rel="stylesheet" href="css/colorpicker.css" type="text/css" />
 
 <!--<script src="js/input.js"></script>-->
 <script src="js/input.js"></script>

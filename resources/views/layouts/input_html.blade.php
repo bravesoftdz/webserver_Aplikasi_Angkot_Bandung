@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ Session::token() }}"> 
 
     <title>Aplikasi Angkot Bandung</title>
 
@@ -284,7 +285,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4" style="" >
+        <div class="col-md-4 pre-scrollable" style="max-height: 550px" >
 
 
               <label for="exampleInputEmail1">
@@ -293,7 +294,7 @@
               <select class="form-control" id="pilih" name="pilih">
               <option value=99> All </option>
               <?php foreach ($trip as $a): ?>
-              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name']; ?> </option>  
+              <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign'] ; ?> </option>  
               <?php endforeach ?> 
               </select>
 
@@ -301,44 +302,103 @@
               
               <input type="checkbox" name="add" id="addLine" > Add Line <br>
               --> 
-              <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
-              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br>
+              <!-- <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
+              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br> -->
               
               <br>
-              <button type="submit" class="btn btn-primary" id="button_clear" >
-                    Clear
-              </button>
+              <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/insert" method="POST" enctype="multipart/form-data">
+                {{csrf_field()}}
+                <table class="table">
+                  <tr hidden="hidden">
+                    <td ><label for="exampleInputPassword1">
+                          Route Id
+                      </label></td>
+                    <td><input type="input" name="route_id" id="route_id" class="form-control" ></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Nomor Trayek
+                      </label></td>
+                    <td><input type="input" id="noTrayek" name="noTrayek" class="form-control" placeholder="01"></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Nama Trayek
+                      </label></td>
+                    <td><input type="input" id="namaTrayek" name="namaTrayek" class="form-control" placeholder="ciroyom - antapani"></td>
+                  </tr>
+                  <tr>
+                      <td><label for="exampleInputPassword1">
+                            route_color
+                          </label>
+                      </td>
+                      <td>
+                        <p>
+                        <div id="colorSelector">
+                          <!-- <button type="submit" class="btn btn-primary"  style="" >
+                            Change Color
+                          </button> -->
+                          <div id="colorText" style="height: 100%; width: 100%"> Changes Color </div>
+                          <input type="input" name="route_color" hidden="hidden" id="route_color">
+                        </div>
+                          <!-- <div id="colorSelector"><div style="background-color: #0000ff; z-index: 9999 "></div> </div> -->
+                        </p>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label for="exampleInputPassword1">
+                        Price
+                      </label>
+                    </td>
+                    <td>
+                    <div class="form-inline">
+                      <select id="fare_id" name="fare_id" class="form-control">
+                        @foreach ($fare_attributes as $data)
+                        <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
+                        @endforeach
+                      </select> <input type="input" id="price" class="form-control" >
+                    </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Image
+                      </label></td>
+                    <td>
+                      <div id="image_place"></div>
+                      <input type="input" id="image" class="form-control" name="image">
+                      <label class="btn btn-default btn-file">
+                          Browse <input type="file" id="file" name="file" enctype="multipart/form-data" >
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          shape id
+                      </label></td>
+                    <td><textarea class="form-control" id="shape_id" name="shape_id" placeholder="isikan shapes id : 1, 2, 3, 4, 5"></textarea></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          keterangan
+                      </label></td>
+                    <td><textarea class="form-control" id="keterangan"></textarea></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button type="button" class="btn btn-primary" id="button_clear" >
+                            Clear
+                      </button>
 
-              <button type="submit" class="btn btn-primary" id="button_save" >
-                    Save
-              </button>
-              <br>
-              <br>
-              <table class="table">
-                <tr>
-                  <td><label for="exampleInputPassword1">
-                        Nama Trayek
-                    </label></td>
-                  <td><input type="input" name="" class="form-control" placeholder="ciroyom - antapani"></td>
-                </tr>
-                <tr>
-                  <td><label for="exampleInputPassword1">
-                        query
-                    </label></td>
-                  <td><textarea class="form-control" id="query"></textarea></td>
-                </tr>
-                <tr>
-                  <td><label for="exampleInputPassword1">
-                        trips
-                    </label></td>
-                  <td><textarea class="form-control" id="trips" placeholder="isikan shapes id : 1, 2, 3, 4, 5"></textarea></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div id="info"></div>
-                  </td>
-                </tr>
-              </table>
+                      <button type="submit" class="btn btn-primary" id="button_save" >
+                            Save
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
               
           @yield('content') 
             
