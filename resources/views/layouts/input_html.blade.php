@@ -217,6 +217,19 @@
         }
         section{
           padding-left: 15px;
+        }
+        .overlay {
+            /* Height & width depends on how you want to reveal the overlay (see JS below) */    
+            height: 100%;
+            width: 100%;
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            background-color: rgb(0,0,0); /* Black fallback color */
+            background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+            overflow-x: hidden; /* Disable horizontal scroll */
+            transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
         }   
     </style>
   </head>
@@ -259,6 +272,109 @@
             </div>
         </div>
     </nav>
+    
+      <div class="overlay">
+        <div class="container" style="z-index: 1; margin-top: 1%" >
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2" >
+              <div class="panel panel-default">
+                  <div class="panel-heading">Input Data Trayek</div>
+                    <div class="panel-body">
+                            
+                      <table class="table">
+                  <tr hidden="hidden">
+                    <td ><label for="exampleInputPassword1">
+                          Route Id
+                      </label></td>
+                    <td><input type="input" name="route_id_panel" id="route_id_panel" class="form-control" ></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Nomor Trayek
+                      </label></td>
+                    <td><input type="input" id="noTrayek_panel" name="noTrayek_panel" class="form-control" placeholder="01"></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Nama Trayek
+                      </label></td>
+                    <td><input type="input" id="namaTrayek_panel" name="namaTrayek_panel" class="form-control" placeholder="ciroyom - antapani"></td>
+                  </tr>
+                  <tr>
+                      <td><label for="exampleInputPassword1">
+                            route_color
+                          </label>
+                      </td>
+                      <td>
+                        <p>
+                        <div id="colorSelector_panel">
+                          <!-- <button type="submit" class="btn btn-primary"  style="" >
+                            Change Color
+                          </button> -->
+                          <div id="colorText_panel" style="height: 100%; width: 100%"> Changes Color (Click Me!) </div>
+                          <input type="input" name="route_color_panel" hidden="hidden" id="route_color_panel">
+                        </div>
+                          <!-- <div id="colorSelector"><div style="background-color: #0000ff; z-index: 9999 "></div> </div> -->
+                        </p>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label for="exampleInputPassword1">
+                        Price
+                      </label>
+                    </td>
+                    <td>
+                    <div class="form-inline">
+                      <select id="fare_id_panel" name="fare_id_panel" class="form-control">
+                        @foreach ($fare_attributes as $data)
+                        <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
+                        @endforeach
+                      </select> <input type="input" id="price_panel" disabled="disabled" class="form-control" >
+                    </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          Image
+                      </label></td>
+                    <td>
+                      <div id="image_place_panel"></div>
+                      <input type="input" id="image_panel" disabled="disabled" class="form-control" name="image_panel">
+                      <label class="btn btn-default btn-file">
+                          Browse <input type="file" id="file" name="file" enctype="multipart/form-data" class="file" >
+                      </label>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td><label for="exampleInputPassword1">
+                          keterangan
+                      </label></td>
+                    <td><textarea class="form-control" id="keterangan_panel" name="keterangan_panel" placeholder="informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button type="submit" class="btn btn-primary" id="button_save_panel" >
+                            Save
+                      </button>
+                      <button type="button" class="btn btn-primary" id="button_clear_panel" >
+                            Clear
+                      </button>
+
+                      
+                    </td>
+                  </tr>
+                </table>
+                      
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+      
 
     <div class="container-fluid">
     <div class="row">
@@ -272,14 +388,8 @@
                         <span class="icon-bar"></span>
                     </button>
                     
-
-                    <!--<ul class="nav navbar-nav navbar-right">
-                    <li><a id="menu-toggle" href="#"><span class="glyphicon glyphicon-align-justify"></span> Menu </a></li>
-                    </ul>-->
                 </div>
                 
-                
-                <!--<img id="image" style="width: 100%" src="http://localhost/webserverangkot/public/images/header.png" alt="Dispute Bills">-->
                 
             </nav>
         </div>
@@ -357,7 +467,7 @@
                         @foreach ($fare_attributes as $data)
                         <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
                         @endforeach
-                      </select> <input type="input" id="price" class="form-control" >
+                      </select> <input type="input"  id="price" class="form-control" >
                     </div>
                     </td>
                   </tr>
@@ -369,7 +479,7 @@
                       <div id="image_place"></div>
                       <input type="input" id="image" class="form-control" name="image">
                       <label class="btn btn-default btn-file">
-                          Browse <input type="file" id="file" name="file" enctype="multipart/form-data" >
+                          Browse <input type="file" id="file" name="file" enctype="multipart/form-data" class="file" >
                       </label>
                     </td>
                   </tr>
@@ -383,7 +493,7 @@
                     <td><label for="exampleInputPassword1">
                           keterangan
                       </label></td>
-                    <td><textarea class="form-control" id="keterangan"></textarea></td>
+                    <td><textarea class="form-control" id="keterangan" name="keterangan"></textarea></td>
                   </tr>
                   <tr>
                     <td></td>

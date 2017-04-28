@@ -14,7 +14,7 @@ function initMap()
 {   
   new_line = new google.maps.MVCArray() ;
   array_Line = new google.maps.MVCArray() ;
-  $("#file").hide();
+  $(".file").hide();
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -6.914838922559386, lng: 107.60765075683594},
     zoom: 13
@@ -164,6 +164,9 @@ function initMap()
      $("#image").val('public/images/'+namaGambar[1] ) ;
      $("#image_place").empty();
 
+     $("#image_panel").val('public/images/'+namaGambar[1] ) ;
+     $("#image_place_panel").empty();     
+
   });
 
   $("#fare_id").on('change', function(){
@@ -173,10 +176,10 @@ function initMap()
       url: "http://localhost/webserverangkot/public/api/get_fare_rule",
       data: "fare_id="+fare_id,
       success: function(data){
-        //console.log(data);
         data = data[0] ;
-        //console.log(data);
         $("#price").val(data.price);
+        $("#price_panel").val(data.price);
+        
       },
       error:function(jqXHR, textStatus, errorThrown) {
            alert(textStatus, errorThrown);
@@ -268,9 +271,73 @@ function initMap()
 
 $(document).ready(function(){
     //$('[data-toggle="popover"]').popover();
-    $('#save_input_panel').on('click', function(e){
+    $("#fare_id_panel").on('change', function(){
+      var fare_id = $("#fare_id_panel").val();
+      $("#fare_id").val(fare_id);
+      $("#fare_id").trigger('change');
+    });
+    // $('#file').hide();
+    /*$("#file_panel").hide();
+
+    $("#file_panel").on('change',function(){
+       //console.log( $("#file").val() );
+       var namaGambar = $("#file_panel").val() ; 
+       namaGambar = namaGambar.split('fakepath\\');
+       $("#image_panel").val('public/images/'+namaGambar[1] ) ;
+       $("#image_place_panel").empty();
+       //file di isi langsung ketika pilih gambar pertama
+       $("#file").val( namaGambar );
+    });*/
+
+    $("#button_clear_panel").on('click' , function(e){
         e.preventDefault();
-        $(".container").hide();
+        $("#namaTrayek").val('');
+        $("#noTrayek").val('');
+        
+        $("#keterangan").val('');
+        $("#price").val('');
+        $("#image").val('');
+        $('#colorSelector_panel div').css('backgroundColor', '');
+        $('#colorText_panel').text('');
+        $('#route_color_panel').val('');
+    });
+
+    $('#colorSelector_panel').ColorPicker({
+      color: '#0000ff',
+      onShow: function (tt) {
+        $(tt).css("z-index", "2");
+        $(tt).fadeIn(500);
+        return false;
+      },
+      onHide: function (tt) {
+        $(tt).css("z-index", "2");
+        $(tt).fadeOut(500);
+        return false;
+      },
+      onChange: function (hsb, hex, rgb) {
+        $('#colorSelector_panel div').css('backgroundColor', '#' + hex);
+        $('#colorText_panel').text( '#' + hex);
+        $('#route_color_panel').val('#' + hex );
+        //langsung ngaruh ke layer berikutnya
+        $('#colorSelector div').css('backgroundColor', '#' + hex);
+        $('#colorText').text( '#' + hex);
+        $('#route_color').val('#' + hex );
+
+      }
+    });
+
+    $('#button_save_panel').on('click', function(e){
+        e.preventDefault();
+        if($("#noTrayek_panel").val() == '' || $("#namaTrayek_panel").val() == '' || $('#route_color_panel').val() =='' || $("#file").val() == '' )
+        {
+          alert("mohon isi semua data terlebih dahulu");
+          return ;
+        }
+        $("#noTrayek").val($("#noTrayek_panel").val());
+        $("#namaTrayek").val($("#namaTrayek_panel").val());
+        $("#keterangan").val($("#keterangan_panel").val());
+        alert("silahkan buat jalur dengan klik di peta");
+        $(".overlay").hide();
     });
 
 });
@@ -368,28 +435,28 @@ var make_marker = function(a, shape_id ='', icon, id='' ){
 
 $(window).load(function() {
   
-  last_shape_id = $.ajax({
-      url: "http://localhost/webserverangkot/public/api/get_last_shapes_id", 
-      method: "GET",
-  });
+    last_shape_id = $.ajax({
+        url: "http://localhost/webserverangkot/public/api/get_last_shapes_id", 
+        method: "GET",
+    });
 
-  last_route_id = $.ajax({
-      url: "http://localhost/webserverangkot/public/api/get_last_route_id", 
-      method: "GET",
-  });
+    last_route_id = $.ajax({
+        url: "http://localhost/webserverangkot/public/api/get_last_route_id", 
+        method: "GET",
+    });
 
-  $.when(last_shape_id, last_route_id).done( function(){
-    last_shape_id = last_shape_id.responseJSON ;
-    last_route_id = last_route_id.responseJSON ;
+    $.when(last_shape_id, last_route_id).done( function(){
+      last_shape_id = last_shape_id.responseJSON ;
+      last_route_id = last_route_id.responseJSON ;
 
-    last_route_id = last_route_id.route_id;
-    last_route_id = last_route_id + 1;
-    $("#route_id").val(last_route_id);
-    last_id = last_shape_id.id;
-    last_shape_id = last_shape_id.shape_id;
-    
-    $(".se-pre-con").fadeOut("slow");
-  });
+      last_route_id = last_route_id.route_id;
+      last_route_id = last_route_id + 1;
+      $("#route_id").val(last_route_id);
+      last_id = last_shape_id.id;
+      last_shape_id = last_shape_id.shape_id;
+      
+      $(".se-pre-con").fadeOut("slow");
+    });
   
 });
 
