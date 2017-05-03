@@ -60,8 +60,16 @@ class EditController extends Controller
         $file->storeAs('images', $imageName);//move(public_path('images'), $imageName );
         
      }
-     return back();
-        
+
+     session::flash("flash_notification", [
+            "level"=>"success" ,
+            "message"=>"berhasil memperbarui data"
+            ]);
+
+     //return back();
+     
+     //return view('map.edit',compact('trip', 'fare_attributes'));
+     return redirect('edit'); 
 
     }
 
@@ -69,7 +77,7 @@ class EditController extends Controller
       $data = $request->data;
 
       if(!empty($data)){
-
+        $route_id = $request->route_id;
         foreach ($data as $key => $value) {
           # code...
           //DB::select("UPDATE shapes SET shape_pt_lat = '".$value['shape_pt_lat']."', shape_pt_lon = '".$value['shape_pt_lon'] ."' where shape_id ='".$value['shape_id']."'");
@@ -92,7 +100,19 @@ class EditController extends Controller
       }
       else
       {
-        return $result = 'empty';
+        return 'empty';
+      }
+
+    }
+
+    public function save_fare_attributes(Request $request){
+      $price_fare_attributes = $request->price_fare_attributes;
+      $fare_id = $request->fare_id;
+      if(!empty($price_fare_attributes))
+      {
+        DB::select("INSERT INTO fare_attributes VALUES ('".$fare_id."','".$price_fare_attributes."','IDR','','') ");
+        return "OK";
+
       }
 
     }

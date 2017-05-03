@@ -9,6 +9,7 @@ var last_route_id;
 var last_id;
 var array_marker = [];
 var hasAddListener = false;
+var price_fare_attributes;
 
 function initMap() 
 {   
@@ -109,8 +110,9 @@ function initMap()
 
   
 
-  $("#form").submit(function(){
-
+  $("#button_save").on('click', function(e){
+      e.preventDefault();
+      
       if( $("#namaTrayek").val() == '' || $("#noTrayek").val() == '' )
       {
         alert('Mohon isi semua data terlebih dahulu.');
@@ -146,7 +148,7 @@ function initMap()
         data: objectData,
         success: function(data){
           console.log(data);
-          return true;
+          $("#form").submit();
         },
         error:function(jqXHR, textStatus, errorThrown) {
              console.log(textStatus, errorThrown);
@@ -176,7 +178,9 @@ function initMap()
       url: "http://localhost/webserverangkot/public/api/get_fare_rule",
       data: "fare_id="+fare_id,
       success: function(data){
+        console.log(data);
         data = data[0] ;
+        
         $("#price").val(data.price);
         $("#price_panel").val(data.price);
         
@@ -186,6 +190,47 @@ function initMap()
         }
     });
   
+  });
+
+  $("#clear_fare_attributes").on("click", function(){
+      console.log('clear_fare_attributes clicked');
+      $('#mymodal').modal('toggle');
+  });
+
+  $("#save_fare_attributes").on("click", function(){
+      console.log('save_fare_attributes clicked');
+      var objectData = {
+        '_token': $('meta[name=csrf-token]').attr('content'),
+        price_fare_attributes: $("#price_fare_attributes").val(),
+        fare_id: last_fare_attributes+1
+      }
+
+      $.ajax({
+        type: "POST",
+        url: "http://localhost/webserverangkot/public/save_fare_attributes",
+        data: objectData,
+        success: function(data){
+          
+          last_fare_attributes = last_fare_attributes + 1;
+          $("#fare_id_panel").append("<option value="+last_fare_attributes+"> "+last_fare_attributes+" </option>");
+          $("#fare_id").append("<option value="+last_fare_attributes+"> "+last_fare_attributes+" </option>");
+          alert("data harga tersimpan!");
+          $("#fare_id_panel").val(last_fare_attributes);
+          $("#fare_id_panel").trigger('change');  
+          $('#mymodal').modal('toggle');
+        },
+        error:function(jqXHR, textStatus, errorThrown) {
+             console.log(textStatus, errorThrown);
+             alert(textStatus, errorThrown);
+             return false;
+          }
+      });
+
+
+  });  
+
+  $("#price_panel").on('click', function(){
+      $('#mymodal').modal('toggle');
   });
 
   $('#colorSelector').ColorPicker({
@@ -298,7 +343,7 @@ $(document).ready(function(){
         $("#price").val('');
         $("#image").val('');
         $('#colorSelector_panel div').css('backgroundColor', '');
-        $('#colorText_panel').text('');
+        $('#colorText_panel').text('Changes Color (Click Me !)');
         $('#route_color_panel').val('');
     });
 
@@ -445,13 +490,21 @@ $(window).load(function() {
         method: "GET",
     });
 
-    $.when(last_shape_id, last_route_id).done( function(){
+    last_fare_attributes = $.ajax({
+        url: "http://localhost/webserverangkot/public/api/get_last_fare_attributes", //host + "/dbangkot3/index.php/welcome/pilih_jalur_tampil" ,
+        method: "GET",
+    });
+
+    $.when(last_shape_id, last_route_id, last_fare_attributes).done( function(){
       last_shape_id = last_shape_id.responseJSON ;
       last_route_id = last_route_id.responseJSON ;
+      last_fare_attributes = last_fare_attributes.responseJSON;
 
+      last_fare_attributes = last_fare_attributes[0].fare_id;
       last_route_id = last_route_id.route_id;
       last_route_id = last_route_id + 1;
       $("#route_id").val(last_route_id);
+      $("#route_id_panel").val(last_route_id);
       last_id = last_shape_id.id;
       last_shape_id = last_shape_id.shape_id;
       

@@ -461,6 +461,12 @@ class ApiControl extends Controller
     return $data[0];
   }
 
+  public function get_last_fare_attributes()
+  {
+    $data = DB::select("select fare_id from fare_attributes order by fare_id DESC");
+    return $data;
+  }
+
   public function get_last_route_id()
   {
     $data = trip::select(['route_id'])->orderby('route_id', 'DESC')->get();

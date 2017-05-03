@@ -285,7 +285,49 @@
     </div>
     <div class="row">
         <div class="col-md-4 pre-scrollable" style="max-height: 550px" >
+            <div id="mymodal" class="modal fade" title="Basic dialog" >
+                <div class="container" style="z-index:5 ; margin-top: 1%" >
+                  <div class="row">
+                    <div class="col-md-8 col-md-offset-2" >
+                      <div class="panel panel-default">
+                          <div class="panel-heading">Input Fare Attributes</div>
+                            <div class="panel-body">
+                                    
+                              <table class="table">
+                                <tr>
+                                  <td>
+                                    <label for="exampleInputPassword1">
+                                      Price
+                                    </label>
+                                  </td>
+                                  <td>
+                                    <input type="input" name="price_fare_attributes" id="price_fare_attributes" class="form-control" placeholder="4000" >
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td>
+                                    <button type="button" class="btn btn-primary" id="save_fare_attributes" >
+                                          Save
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="clear_fare_attributes" >
+                                          Clear
+                                    </button>
 
+                                    
+                                  </td>
+                                </tr>
+                              </table>
+                              
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/update" method="POST" enctype="multipart/form-data">
+              {{csrf_field()}}
 
               <label for="exampleInputEmail1">
                   Trayek Angkot
@@ -296,16 +338,11 @@
               <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
               <?php endforeach ?> 
               </select>
-
-              <!--<input type="checkbox" name="add" id="addMarker" > Add Marker <br>
-              
-              <input type="checkbox" name="add" id="addLine" > Add Line <br>
-              --> 
-              <!-- <input  type="radio" name="add" id="addMarker" value="addMarker" > Add Marker <br>
-              <input  type="radio" name="add" id="addLine" value="addLine"> Add Line <br> -->
               <br>
-              <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/update" method="POST" enctype="multipart/form-data">
-              {{csrf_field()}}
+              @include('layouts.flash')
+              
+                
+              
                 <table class="table">
                   <tr hidden="hidden">
                     <td ><label for="exampleInputPassword1">
@@ -355,7 +392,7 @@
                       @foreach ($fare_attributes as $data)
                       <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
                       @endforeach
-                    </select> <input type="input" id="price" class="form-control" >
+                    </select> <input type="input" id="price" class="form-control" data-toggle="modal" data-target="#myModal">
                     </td>
                     </div>
                   </tr>

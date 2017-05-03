@@ -292,8 +292,9 @@
                  
               <div class="se-pre-con"></div>
                   
-
-
+              <form id="form"  enctype="multipart/form-data" method="POST" enctype="multipart/form-data">
+              {{csrf_field()}}
+              
               <label for="exampleInputEmail1">
                   Trayek Angkot
               </label>
@@ -302,12 +303,18 @@
               <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
               <?php endforeach ?> 
               </select>
+              
+              @include('layouts.flash')
+
               <br>
+              
+
+              </form>
               <table  class="table" id="tableInfo" >
    
               </table>
                   
-            @yield('content')    
+              @yield('content')    
         </div>
            
         

@@ -35,10 +35,16 @@ class InputController extends Controller
 	     //route_id = auto_increment
 	     DB::select("INSERT INTO trips VALUES ('".$route_id."','0','".$trip_headsign."','".$trip_short_name."','','','".$shape_id."','','".$keterangan."' )");
 	     DB::select("INSERT INTO route VALUES ('".$route_id."','".$trip_headsign."','','','0','','".$route_color."','','1','".$image."')");
-	     DB::select("INSERT INTO fare_rule VALUES ('','".$fare_id."','".$route_id."','','')");
+	     DB::select("INSERT INTO fare_rule VALUES ('".$route_id."','".$fare_id."','".$route_id."','','')");
 	     
-	     
-	     return back();
+	     session::flash("flash_notification", [
+            "level"=>"success" ,
+            "message"=>"berhasil memperbarui data"
+            ]);
+	    
+	     //return view('map.trayek', compact('trip') );
+	     return redirect()->route('trayek');
+	     //return back();
 
     }
 

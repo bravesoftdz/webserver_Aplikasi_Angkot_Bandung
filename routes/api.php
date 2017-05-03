@@ -27,6 +27,8 @@ Route::get('/get_jalur_terdekat_cepat_new', 'ApiController@get_jalur_terdekat_ce
 Route::get('/trips/get_jalur_terdekat_baru', 'ApiController@get_jalur_terdekat_baru');
 
 Route::get('/get_last_shapes_id', 'ApiControl@get_last_shapes_id');
+Route::get('/get_last_fare_attributes', 'ApiControl@get_last_fare_attributes');
+
 Route::get('/get_last_route_id', 'ApiControl@get_last_route_id');
 
 Route::get('/import_placeName', 'ApiController@import_placeName'); //untuk import database
