@@ -2,11 +2,10 @@
 
 
 Auth::routes();
+
+
+
 Route::get('/', 'MapController@index');
-
-
-
-
 Route::get('/trayek', 'MapController@trayek')->name('trayek');
 Route::get('/edit', 'MapController@edit')->name('edit')->middleware('auth');
 Route::get('/input', 'MapController@input')->middleware('auth');

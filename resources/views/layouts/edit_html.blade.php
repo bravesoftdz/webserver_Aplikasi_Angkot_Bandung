@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <meta name="csrf-token" content="{{ Session::token() }}"> 
+    <meta name="csrf-token" content="{{ Session::token() }}"> 
+    
     <title>Aplikasi Angkot Bandung</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -243,10 +244,15 @@
                   </li>
                   
                   <li>
+                    <a href="http://localhost/webserverangkot/public/input">Input Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-plus"></span>
+                    </a>
+                  </li>
+                  
+                  <li>
                       <a href="{{ url('/logout') }}"
                           onclick="event.preventDefault();
                                    document.getElementById('logout-form').submit();">
-                          Logout
+                          Logout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-log-out"></span>
                       </a>
 
                       <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">

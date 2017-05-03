@@ -243,10 +243,15 @@
                   </li>
                   
                   <li>
+                    <a href="http://localhost/webserverangkot/public/input">Input Angkutan Umum<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-plus"></span>
+                    </a>
+                  </li>
+                  
+                  <li>
                       <a href="{{ url('/logout') }}"
                           onclick="event.preventDefault();
                                    document.getElementById('logout-form').submit();">
-                          Logout
+                          Logout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-log-out"></span>
                       </a>
 
                       <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">

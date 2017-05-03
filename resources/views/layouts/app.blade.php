@@ -36,7 +36,8 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <!-- {{ config('app.name', 'Aplikasi Angkot Bandung') }} -->
+                        Aplikasi Angkot Bandung
                     </a>
                 </div>
 
