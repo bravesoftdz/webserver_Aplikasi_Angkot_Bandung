@@ -67,10 +67,10 @@ class EditController extends Controller
             ]);
 
      //return back();
-     
+     $trip = trip::orderBy('trip_short_name')->get();
      //return view('map.edit',compact('trip', 'fare_attributes'));
-     return redirect('edit'); 
-
+     //return redirect()->route('edit', ['trip'=> $trip ]); 
+     return redirect()->action('MapController@edit');
     }
 
     public function update_points(Request $request){

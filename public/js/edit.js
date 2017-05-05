@@ -21,7 +21,6 @@ var map;
 var Polyline;
 var last_id;
 var hasAddListener = false;
-var last_fare_attributes;
 
 function initMap() 
 {   
@@ -59,46 +58,6 @@ function initMap()
 
   });
 
-  $("#clear_fare_attributes").on("click", function(){
-      console.log('clear_fare_attributes clicked');
-      $('#mymodal').modal('toggle');
-  });
-
-  $("#save_fare_attributes").on("click", function(){
-      console.log('save_fare_attributes clicked');
-      var objectData = {
-        '_token': $('meta[name=csrf-token]').attr('content'),
-        price_fare_attributes: $("#price_fare_attributes").val(),
-        fare_id: last_fare_attributes+1
-      }
-
-      $.ajax({
-        type: "POST",
-        url: "http://localhost/webserverangkot/public/save_fare_attributes",
-        data: objectData,
-        success: function(data){
-          
-          last_fare_attributes = last_fare_attributes + 1;
-          $("#fare_id").append("<option value="+last_fare_attributes+"> "+last_fare_attributes+" </option>");
-          alert("data harga tersimpan!");
-          $("#fare_id").val(last_fare_attributes);
-          $("#fare_id").trigger('change');  
-          $('#mymodal').modal('toggle');
-        },
-        error:function(jqXHR, textStatus, errorThrown) {
-             console.log(textStatus, errorThrown);
-             alert(textStatus, errorThrown);
-             return false;
-          }
-      });
-
-
-  });  
-
-  $("#price").on('click', function(){
-      $('#mymodal').modal('toggle');
-  });
-
   $("#button_clear").on('click', function(){
     
     
@@ -107,7 +66,7 @@ function initMap()
     $("#textarea").val('');
     $('input[type=radio][name=add]').prop("checked", false);
     addMarker = [];
-    //hasAddListener = false;
+    hasAddListener = false;
     new_shapes = [] ;
     array_Line.clear();  //new google.maps.MVCArray() ;
     array_shape_id = [];
@@ -140,63 +99,54 @@ function initMap()
 
   });
 
-  /*$("#button_save").on('click', function(e){   
+  $("#button_save").on('click', function(e){   
     //hapus isi textarea dulu
     // e.preventDefault();
+    if($("#route_id").val() == '')
+    {
+      alert('pilih trayek angkot dulu ');
+      $("#button_clear").trigger('click');
+      return false;
+
+    }
+    var tmp = [];
+    for (i in data){
+      var lat = points.getAt(i).lat();
+      var lng = points.getAt(i).lng()
+      data[i].shape_pt_lat = lat.toString();
+      data[i].shape_pt_lon = lng.toString() ;
+      tmp.push( data[i].shape_id );
+    }
+    tmp = tmp.join(", ");
+    $("#shape_id").val(tmp);
+
+    var objectData = {
+      '_token': $('meta[name=csrf-token]').attr('content'),
+      data: data,
+      route_id: $("#route_id").val()
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "http://localhost/webserverangkot/public/update_points",
+      data: objectData,
+      success: function(data){
+        console.log(data);
+        alert(data);
+      },
+      error:function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+           alert(textStatus, errorThrown);
+        }
+    });
     
     
-    
-  });*/
-
-  $("#button_save").on( 'click', function(e){
-      e.preventDefault();
-      
-      if($("#route_id").val() == '')
-      {
-        alert('pilih trayek angkot dulu ');
-        $("#button_clear").trigger('click');
-        return false;
-
-      }
-      var tmp = [];
-      for (i in data){
-        var lat = points.getAt(i).lat();
-        var lng = points.getAt(i).lng()
-        data[i].shape_pt_lat = lat.toString();
-        data[i].shape_pt_lon = lng.toString() ;
-        tmp.push( data[i].shape_id );
-      }
-      tmp = tmp.join(", ");
-      $("#shape_id").val(tmp);
-
-      var objectData = {
-        '_token': $('meta[name=csrf-token]').attr('content'),
-        data: data,
-        route_id: $("#route_id").val()
-      }
-
-      $.ajax({
-        type: "POST",
-        url: "http://localhost/webserverangkot/public/update_points",
-        data: objectData,
-        success: function(data){
-          console.log(data);
-          alert(data);
-          $("#form").submit();
-        },
-        error:function(jqXHR, textStatus, errorThrown) {
-             console.log(textStatus, errorThrown);
-             alert(textStatus, errorThrown);
-             return false;
-          }
-      });
-  });
+  })
 
   
 
   $("#fare_id").on('change', function(){
     var fare_id = $("#fare_id").val();
-
     $.ajax({
       type: "POST",
       url: "http://localhost/webserverangkot/public/api/get_fare_rule",
@@ -282,17 +232,8 @@ $(window).load(function() {
       method: "GET",
   });
 
-  last_fare_attributes = $.ajax({
-      url: "http://localhost/webserverangkot/public/api/get_last_fare_attributes", //host + "/dbangkot3/index.php/welcome/pilih_jalur_tampil" ,
-      method: "GET",
-  });
-
-  $.when( last_shape_id, last_fare_attributes ).done( function(){
+  $.when(last_shape_id).done( function(){
     last_shape_id = last_shape_id.responseJSON ;
-    last_fare_attributes = last_fare_attributes.responseJSON;
-
-    last_fare_attributes = last_fare_attributes[0].fare_id;
-
     last_id = last_shape_id.id;
     last_shape_id = last_shape_id.shape_id;
     

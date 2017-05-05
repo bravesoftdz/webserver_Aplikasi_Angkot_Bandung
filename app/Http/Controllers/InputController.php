@@ -43,7 +43,8 @@ class InputController extends Controller
             ]);
 	    
 	     //return view('map.trayek', compact('trip') );
-	     return redirect()->route('trayek');
+	     //return redirect()->route('trayek');
+	     return redirect()->action('MapController@trayek');
 	     //return back();
 
     }
@@ -61,6 +62,9 @@ class InputController extends Controller
 		          if( $value['id'] == '' ){
 		            DB::select("INSERT INTO shapes value ('','".$value['shape_id']."','".$value['shape_pt_lat']."','".$value['shape_pt_lon']."','0','','','')");
 		            //$result[] = "INSERT INTO shapes value ('','".$value['shape_id']."','".$value['shape_pt_lat']."','".$value['shape_pt_lon']."','0','','','')";
+		          }
+		          else{
+		          	continue;
 		          }
 		          
 		        }

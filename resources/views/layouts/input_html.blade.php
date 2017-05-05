@@ -406,20 +406,21 @@
                   <div class="row">
                     <div class="col-md-8 col-md-offset-2" >
                       <div class="panel panel-default">
-                          <div class="panel-heading">Input Fare Attributes</div>
+                          <div class="panel-heading">Input Work Order</div>
                             <div class="panel-body">
                                     
                               <table class="table">
                                 <tr>
                                   <td>
                                     <label for="exampleInputPassword1">
-                                      Price
+                                      Tanggal Order
                                     </label>
                                   </td>
                                   <td>
                                     <input type="input" name="price_fare_attributes" id="price_fare_attributes" class="form-control" placeholder="4000" >
                                   </td>
                                 </tr>
+                                
                                 <tr>
                                   <td></td>
                                   <td>

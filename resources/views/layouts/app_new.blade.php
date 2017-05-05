@@ -352,11 +352,23 @@
                  <button type="submit" class="btn btn-primary" id="reverse" > Reverse </button>
                 <input type="checkbox" name="walk_route_check" id="walk_route_check" checked="checked"> use walk route ? <br>
                 <br>
+                
+                <div class="myProgressBar" style="width: 64px;
+                  height: 64px;
+                  background: url(images/loader-64x/Preloader_3.gif) center no-repeat #fff;">
+                    
+                </div>
+                <div class="label label-info myProgressBar"> Hang on ... </div>
+
                 <ul class="nav nav-tabs" id="tabs">
                   <!--<li role="presentation" onchange=""  ><a href="#">profile </a></li>
                   <li role="presentation" class="active"><a href="#"></a></li>
                   <li role="presentation"><a href="#"></a></li> --> 
                 </ul>
+                <div class="se-pre-con"></div>
+                <!--<div id="progressBar"></div>-->
+                
+
                 <div class="tab-content clearfix" id="isiTabs">
                     <div class="tab-pane active" id="1a">
                       <!--<h3>Content's background color is the same for the tab</h3> -->
@@ -381,14 +393,7 @@
                     </div>-->
                 </div>
                 
-                <div class="se-pre-con"></div>
-                <!--<div id="progressBar"></div>-->
-                <div class="myProgressBar" style="width: 64px;
-                  height: 64px;
-                  background: url(images/loader-64x/Preloader_3.gif) center no-repeat #fff;">
-                    
-                </div>
-                <div class="label label-info myProgressBar"> Hang on ... </div>
+                
 
                 @yield('content')    
         </div>
