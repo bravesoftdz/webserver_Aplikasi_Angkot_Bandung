@@ -297,17 +297,17 @@
                           <td><label for="exampleInputPassword1">
                                 Nomor Trayek
                             </label></td>
-                          <td><input type="input" id="noTrayek_panel" name="noTrayek_panel" class="form-control" placeholder="01"></td>
+                          <td><input type="input" id="noTrayek_panel" name="noTrayek_panel" class="form-control" placeholder="Silahkan isikan no trayek. Contoh: 01"></td>
                         </tr>
                         <tr>
                           <td><label for="exampleInputPassword1">
                                 Nama Trayek
                             </label></td>
-                          <td><input type="input" id="namaTrayek_panel" name="namaTrayek_panel" class="form-control" placeholder="ciroyom - antapani"></td>
+                          <td><input type="input" id="namaTrayek_panel" name="namaTrayek_panel" class="form-control" placeholder="Silahkan isikan nama Trayek. Contoh: Ciroyom - Antapani"></td>
                         </tr>
                         <tr>
                             <td><label for="exampleInputPassword1">
-                                  route_color
+                                  Warna Trayek
                                 </label>
                             </td>
                             <td>
@@ -316,7 +316,7 @@
                                 <!-- <button type="submit" class="btn btn-primary"  style="" >
                                   Change Color
                                 </button> -->
-                                <div id="colorText_panel" style="height: 100%; width: 100%"> Changes Color (Click Me!) </div>
+                                <div id="colorText_panel" style="height: 100%; width: 100%"> Ganti Warna (Click Me!) </div>
                                 <input type="input" name="route_color_panel" hidden="hidden" id="route_color_panel">
                               </div>
                                 <!-- <div id="colorSelector"><div style="background-color: #0000ff; z-index: 9999 "></div> </div> -->
@@ -326,22 +326,23 @@
                         <tr>
                           <td>
                             <label for="exampleInputPassword1">
-                              Price
+                              Harga
                             </label>
                           </td>
                           <td>
-                          <div class="form-inline">
-                            <select id="fare_id_panel" name="fare_id_panel" class="form-control">
+                          <div >
+                            <!-- <select id="fare_id_panel" name="fare_id_panel" class="form-control">
                               @foreach ($fare_attributes as $data)
                               <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
                               @endforeach
-                            </select> <input type="input" id="price_panel"  class="form-control" >
+                            </select> --> 
+                            <input type="input" id="price_panel"  class="form-control" placeholder="Masukan Harga dalam bentuk angka. Contoh: 4000" >
                           </div>
                           </td>
                         </tr>
                         <tr>
                           <td><label for="exampleInputPassword1">
-                                Image
+                                Gambar
                             </label></td>
                           <td>
                             <div id="image_place_panel"></div>
@@ -354,7 +355,7 @@
                         
                         <tr>
                           <td><label for="exampleInputPassword1">
-                                keterangan
+                                Keterangan
                             </label></td>
                           <td><textarea class="form-control" id="keterangan_panel" name="keterangan_panel" placeholder="informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
                         </tr>
@@ -366,6 +367,9 @@
                             </button>
                             <button type="button" class="btn btn-primary" id="button_clear_panel" >
                                   Clear
+                            </button>
+                            <button type="button" class="btn btn-primary" id="button_cancel_panel" >
+                                  Cancel
                             </button>
 
                             
@@ -406,14 +410,14 @@
                   <div class="row">
                     <div class="col-md-8 col-md-offset-2" >
                       <div class="panel panel-default">
-                          <div class="panel-heading">Input Work Order</div>
+                          <div class="panel-heading">Input Harga</div>
                             <div class="panel-body">
                                     
                               <table class="table">
                                 <tr>
                                   <td>
                                     <label for="exampleInputPassword1">
-                                      Tanggal Order
+                                      Harga
                                     </label>
                                   </td>
                                   <td>
@@ -442,6 +446,7 @@
                   </div>
                 </div>
             </div>
+            
             <form id="form"  enctype="multipart/form-data" action="http://localhost/webserverangkot/public/insert" method="POST" enctype="multipart/form-data">
                 {{csrf_field()}}
 
@@ -485,7 +490,7 @@
                   </tr>
                   <tr>
                       <td><label for="exampleInputPassword1">
-                            route_color
+                            Warna Trayek
                           </label>
                       </td>
                       <td>
@@ -504,22 +509,23 @@
                   <tr>
                     <td>
                       <label for="exampleInputPassword1">
-                        Price
+                        Harga
                       </label>
                     </td>
                     <td>
-                    <div class="form-inline">
-                      <select id="fare_id" name="fare_id" class="form-control">
+                    <div >
+                      <!-- <select id="fare_id" name="fare_id" class="form-control">
                         @foreach ($fare_attributes as $data)
                         <option value={{$data->fare_id}}> {{$data->fare_id}} </option>
                         @endforeach
-                      </select> <input type="input"  id="price" class="form-control" >
+                      </select> --> 
+                      <input type="input"  id="price" name="price" class="form-control" placeholder="Masukan Harga dalam bentuk Angka. Contoh: 4000" >
                     </div>
                     </td>
                   </tr>
                   <tr>
                     <td><label for="exampleInputPassword1">
-                          Image
+                          Gambar
                       </label></td>
                     <td>
                       <div id="image_place"></div>
@@ -531,15 +537,15 @@
                   </tr>
                   <tr>
                     <td><label for="exampleInputPassword1">
-                          shape id
+                          Shape id
                       </label></td>
                     <td><textarea class="form-control" id="shape_id" name="shape_id" placeholder="isikan shapes id : 1, 2, 3, 4, 5"></textarea></td>
                   </tr>
                   <tr>
                     <td><label for="exampleInputPassword1">
-                          keterangan
+                          Keterangan
                       </label></td>
-                    <td><textarea class="form-control" id="keterangan" name="keterangan"></textarea></td>
+                    <td><textarea class="form-control" id="keterangan" name="keterangan" placeholder="informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
                   </tr>
                   <tr>
                     <td></td>

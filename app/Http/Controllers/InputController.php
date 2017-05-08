@@ -19,14 +19,32 @@ class InputController extends Controller
     {
 	     $trip_short_name = $request->noTrayek ; // kalau dari ajax, namaTrayek teh dari JSON yang dikirim.
 	     $route_id = $request->route_id ; //trip::find($id);
-	     $fare_id = $request->fare_id;
+	     
 	     $route_color = $request->route_color;
 	     $price = $request->price;
+	     //$fare_id = $request->fare_id;
 	     $file = $request->file('file');
 	     $image = $request->image;
 	     $shape_id = $request->shape_id;
 	     $keterangan = $request->keterangan;
 	     $trip_headsign = $request->namaTrayek;
+
+	     $fare_id = DB::select("select fare_id from fare_attributes where price = '".$price."'");
+	     if( !empty($fare_id) ){
+	        $fare_id = $fare_id[0]->fare_id;
+	     }
+	     else
+	     {
+	     	$fare_id = DB::select("select fare_id from fare_attributes ORDER BY fare_id DESC LIMIT 1");
+	     	$fare_id = $fare_id[0]->fare_id + 1; // angka terakhir ditambah satu.
+
+	     	//coding input ke db. fare_attributes
+	     	DB::select("INSERT INTO fare_attributes VALUES ('".$fare_id."','".$price."','IDR','','') ");
+
+
+	     }
+	     
+
 
 	     if( $request->hasFile('file') && !file_exists( public_path('images/'.$file->getClientOriginalName() ) )){
 	        $imageName = $file->getClientOriginalName();
@@ -79,4 +97,6 @@ class InputController extends Controller
 	        return $result = 'empty';
 	      }
 	}
+
+	
 }

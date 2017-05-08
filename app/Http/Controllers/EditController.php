@@ -40,16 +40,30 @@ class EditController extends Controller
         
      $trip_short_name = $request->namaTrayek ; // kalau dari ajax, namaTrayek teh dari JSON yang dikirim.
      $route_id = $request->route_id ; //trip::find($id);
-     $fare_id = $request->fare_id;
+     
      $route_color = $request->route_color;
      $price = $request->price;
      //$fare_rule = $request->fare_rule;
+     //$fare_id = $request->fare_id; // dalam tahap pengembangan untuk dihapus.
      $file = $request->file('file');
      $image = $request->image;
      $shape_id = $request->shape_id;
      $keterangan = $request->keterangan;
      $trip_headsign = $request->trip_headsign;
 
+
+     $fare_id = DB::select("select fare_id from fare_attributes where price = '".$price."'");
+     if( !empty($fare_id) ){
+        $fare_id = $fare_id[0]->fare_id;
+     }
+     else
+     {
+      $fare_id = DB::select("select fare_id from fare_attributes ORDER BY fare_id DESC LIMIT 1");
+      $fare_id = $fare_id[0]->fare_id + 1; // angka terakhir ditambah satu.
+
+      //coding input ke db. fare_attributes
+      DB::select("INSERT INTO fare_attributes VALUES ('".$fare_id."','".$price."','IDR','','') ");
+     }
 
      DB::select("UPDATE trips SET trip_short_name = '".$trip_short_name."', trip_headsign = '".$trip_headsign."', shape_id = '".$shape_id."', ket = '".$keterangan."' where route_id ='".$route_id."'");
      DB::select("UPDATE route SET route_short_name = '".$trip_headsign."', route_color = '".$route_color."', image = '".$image."' where route_id ='".$route_id."'");
@@ -66,10 +80,7 @@ class EditController extends Controller
             "message"=>"berhasil memperbarui data"
             ]);
 
-     //return back();
-     $trip = trip::orderBy('trip_short_name')->get();
-     //return view('map.edit',compact('trip', 'fare_attributes'));
-     //return redirect()->route('edit', ['trip'=> $trip ]); 
+     //return ['image'=>$image, 'route_id'=>$route_id ];
      return redirect()->action('MapController@edit');
     }
 
@@ -105,7 +116,7 @@ class EditController extends Controller
 
     }
 
-    public function save_fare_attributes(Request $request){
+    /*public function save_fare_attributes(Request $request){
       $price_fare_attributes = $request->price_fare_attributes;
       $fare_id = $request->fare_id;
       if(!empty($price_fare_attributes))
@@ -115,6 +126,6 @@ class EditController extends Controller
 
       }
 
-    }
+    }*/
     
 }

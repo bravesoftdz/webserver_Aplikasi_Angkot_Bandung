@@ -111,8 +111,8 @@ function initMap()
 
   
 
-  $("#form").submit(function(){
-
+  $("#button_save").on('click', function(e){
+      e.preventDefault();
       if( $("#namaTrayek").val() == '' || $("#noTrayek").val() == '' )
       {
         alert('Mohon isi semua data terlebih dahulu.');
@@ -148,7 +148,7 @@ function initMap()
         data: objectData,
         success: function(data){
           console.log(data);
-          return true;
+          $("#form").submit();
         },
         error:function(jqXHR, textStatus, errorThrown) {
              console.log(textStatus, errorThrown);
@@ -189,6 +189,8 @@ function initMap()
     });
   
   });
+
+
 
   $('#colorSelector').ColorPicker({
     color: '#0000ff',
@@ -307,6 +309,12 @@ $(document).ready(function(){
         cekIdMarker = [];
     });
 
+    
+    $("#button_cancel_panel").on('click' , function(e){
+        e.preventDefault();
+        $(".overlay").hide();
+    });
+
     $('#colorSelector_panel').ColorPicker({
       color: '#0000ff',
       onShow: function (tt) {
@@ -341,6 +349,7 @@ $(document).ready(function(){
         $("#noTrayek").val($("#noTrayek_panel").val());
         $("#namaTrayek").val($("#namaTrayek_panel").val());
         $("#keterangan").val($("#keterangan_panel").val());
+        $("#price").val( $("#price_panel").val() );
         alert("silahkan buat jalur dengan klik di peta");
         $(".overlay").hide();
     });

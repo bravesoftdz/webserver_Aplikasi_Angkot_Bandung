@@ -18,6 +18,9 @@ Route::post('/update_points', 'EditController@update_points');
 Route::post('/save_fare_attributes', 'EditController@save_fare_attributes');
 
 Route::post('/insert', 'InputController@insert');
+
+Route::get('/insert_test', 'InputController@insert_test');
+
 Route::post('/insert_points', 'InputController@insert_points');
 
 Route::get('/graph', 'MapController@graph');
