@@ -267,24 +267,67 @@
 
     <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12" style="z-index: 0">
+        <div class="col-md-12" style="z-index: 998">
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-image: url('http://localhost/webserverangkot/public/images/header.png'); background-size: 100% 100%; ">
                 <div class="navbar-header">
-                     
-
-                    <button type="button" class=" navbar-toggle button"  data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" id="menu-toggle" style="display: block; float: left; margin-left: 10px  ">
+                    <button type="button" class=" navbar-toggle button navbar-left"  data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" id="menu-toggle" style="float: left; margin-left: 10px; "  >
                         <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    
-
-                    <!--<ul class="nav navbar-nav navbar-right">
-                    <li><a id="menu-toggle" href="#"><span class="glyphicon glyphicon-align-justify"></span> Menu </a></li>
-                    </ul>-->
                 </div>
                 
-                
-                <!--<img id="image" style="width: 100%" src="http://localhost/webserverangkot/public/images/header.png" alt="Dispute Bills">-->
+                <div class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav navbar-left ">
+                        
+                        @if (!Auth::guest())
+                          <li class="dropdown" >
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> Admin<span class="caret"></span></a>
+                            <ul class="dropdown-menu" >
+                                <li>
+                                  <a href="http://localhost/webserverangkot/public/" > <span class="glyphicon glyphicon-home" ></span>  Cari Rute Angkot </a> 
+                                </li>
+                                
+                                <li> 
+                                  <a href="http://localhost/webserverangkot/public/trayek"> <span class="glyphicon glyphicon-th-list" ></span> Info Angkutan Umum  </a>
+                                </li>
+                                
+                                <li>
+                                  <a href="http://localhost/webserverangkot/public/edit"> <span class="glyphicon glyphicon-pencil"></span> Edit Angkutan Umum
+                                  </a>
+                                </li>
+
+                                <li>
+                                  <a href="http://localhost/webserverangkot/public/input"><span class="glyphicon glyphicon-plus"></span> Input Angkutan Umum
+                                  </a>
+                                </li>
+                                
+                                <li>
+                                    <a href="{{ url('/logout') }}"
+                                        onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                        <span style="font-size:16px;" class="hidden-xs showopacity glyphicon glyphicon-log-out"></span>
+                                        Logout
+                                    </a>
+
+                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </li>
+                            </ul>
+                            
+                          </li>
+                        @else
+                          <li>
+                            <a href="http://localhost/webserverangkot/public/" > <span class="glyphicon glyphicon-home" ></span>  Cari Rute Angkot </a> 
+                          </li>
+                          
+                          <li> 
+                            <a href="http://localhost/webserverangkot/public/trayek"> <span class="glyphicon glyphicon-th-list" ></span> Info Angkutan Umum  </a>
+                          </li>
+                        @endif
+                  </ul>
+
+                </div>
                 
             </nav>
         </div>
