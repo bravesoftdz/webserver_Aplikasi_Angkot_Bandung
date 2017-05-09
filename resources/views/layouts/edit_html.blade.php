@@ -306,9 +306,8 @@
               <?php endforeach ?> 
               </select>
               <br>
-              @include('layouts.flash')
-              
-                
+
+              @include('layouts.flash')               
               
                 <table class="table" >
                   <tr hidden="hidden">
@@ -316,6 +315,17 @@
                           Route Id
                       </label></td>
                     <td><input type="input" name="route_id" id="route_id" class="form-control" ></td>
+                  </tr>
+                  <tr>
+                    <td><label for="exampleInputPassword1" > Import Data Angkot </label> </td>
+                    <td>
+                      <select class="form-control" id="pilihImport" name="pilihImport">
+                      <option value=99> All </option>
+                      <?php foreach ($trip as $a): ?>
+                      <option value= <?php echo $a['route_id']; ?> > <?php echo $a['trip_short_name'].". ".$a['trip_headsign']; ?> </option>  
+                      <?php endforeach ?> 
+                      </select>
+                    </td>
                   </tr>
                   <tr>
                     <td><label for="exampleInputPassword1">
@@ -405,6 +415,11 @@
                       <button type="submit" class="btn btn-primary" id="button_save" >
                         Save
                       </button>
+
+                      <button type="button" class="btn btn-primary" id="button_delete" >
+                        Delete
+                      </button>
+
                     </td>
                   </tr>
                   

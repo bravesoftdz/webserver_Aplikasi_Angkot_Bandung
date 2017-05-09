@@ -1189,21 +1189,7 @@ class ApiControl extends Controller
               {
                 $value['angkot'][0]->price = 1500;  
               }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (1/3) * $total_jarak) ) // 1/3 pertama
-              {
-                $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
-                //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
-                if(substr( $value['angkot'][0]->price , -3) < 499 )
-                {
-                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
-                }
-                else
-                {
-                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
-                }                  
-              }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
+              elseif ($value['distance'] > ( (1/3) * $total_jarak ) and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
               {
                 # code...
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
@@ -1218,6 +1204,21 @@ class ApiControl extends Controller
                   $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
                 }                  
               }
+              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (1/3) * $total_jarak) ) // 1/3 pertama
+              {
+                $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
+                //$temp = substr($value['angkot'][0]->price, -2);
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
+              }
+              
               else
               {
                 $value['angkot'][0]->price = $value['angkot'][0]->price;
@@ -1231,12 +1232,16 @@ class ApiControl extends Controller
           $total_cost = 0;   
           foreach ($step as $key => $value) {
             # code... sedang mengerjakan price ini
-            $temp = (object) $value['angkot'][0];
-            $total_cost = $total_cost + (int) $temp->price;//$total_cost + $value['angkot'][0]->price; 
+            $temp = $value['angkot'][0];
+            $total_cost = $total_cost + (int)  $temp->price;//$total_cost + $value['angkot'][0]->price; 
+
           }
           
+
+
            $routingresult[] = [ "step"=> $step, 'total_cost'=>$total_cost ];
         } //ini ambil intersec terakhir
+
 
         for ($i=0; $i < sizeof($no_intersec) ; $i++) { 
           # code...
@@ -1343,21 +1348,7 @@ class ApiControl extends Controller
               {
                 $value['angkot'][0]->price = 1500;  
               }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (1/3) * $total_jarak) ) // 1/3 pertama
-              {
-                $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
-                //$temp = substr($value['angkot'][0]->price, -2);
-                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
-                if(substr( $value['angkot'][0]->price , -3) < 499 )
-                {
-                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
-                }
-                else
-                {
-                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
-                }                  
-              }
-              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
+              elseif ($value['distance'] > ( (1/3) * $total_jarak ) and $value['distance'] <= ( (2/3) * $total_jarak) ) // 2/3 pertama
               {
                 # code...
                 $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) * (2/3) )) ; //pembulatan
@@ -1372,6 +1363,21 @@ class ApiControl extends Controller
                   $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
                 }                  
               }
+              elseif ($value['distance'] > 1000 and $value['distance'] <= ( (1/3) * $total_jarak ) ) // 1/3 pertama
+              {
+                $value['angkot'][0]->price = round(1500 + ( ($value['angkot'][0]->price - 1500) / 3 ))  ; //pembulatan
+                //$temp = substr($value['angkot'][0]->price, -2);
+                $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '00', -2);
+                if(substr( $value['angkot'][0]->price , -3) < 499 )
+                {
+                  $value['angkot'][0]->price = substr_replace($value['angkot'][0]->price , '500', -3);
+                }
+                else
+                {
+                  $value['angkot'][0]->price = $value['angkot'][0]->price + (1000 - substr( $value['angkot'][0]->price , -3) ) ;
+                }                  
+              }
+              
               else
               {
                 $value['angkot'][0]->price = $value['angkot'][0]->price;
@@ -1385,15 +1391,19 @@ class ApiControl extends Controller
           $total_cost = 0;   
           foreach ($step as $key => $value) {
             # code... sedang mengerjakan price ini
-            $temp = (object) $value['angkot'][0];
-            $total_cost = $total_cost + (int)$temp->price;
-
+            $temp = $value['angkot'][0];
+            $total_cost = $total_cost + $temp->price;
+            
           }
           
+          
+
           $routingresult[] = [ "step"=> $step, 'total_cost'=>$total_cost ];
-           /*if($i == 1){
-              return $routingresult;
-            }*/
+
+          /*if($routingresult[sizeof($routingresult) -1 ]['step'][2]['angkot'][0]->trip_short_name == "10" && $routingresult[sizeof($routingresult) -1 ]['step'][2]['angkot'][0]->price > 1500  ){
+              return [$step, $i, sizeof($routingresult), $routingresult[sizeof($routingresult) -1 ] ];
+          }*/
+
         } // ini ambil intersec pertama */
         
         //penambahan total_distance di step
@@ -1410,9 +1420,10 @@ class ApiControl extends Controller
           
         }
 
-        //return $routingresult[0];
+        //return $routingresult;
         usort($routingresult, function($a, $b) {return $a['total_cost'] - $b['total_cost']; }); //sorting by total cost
         $routingresult = array_slice($routingresult, 0,5) ; //return cuman 3 kombinasi
+        
         
 
         usort($routingresult, function($a, $b) {return $a['total_distance'] - $b['total_distance']; }); //sorting by total_distance

@@ -116,6 +116,17 @@ class EditController extends Controller
 
     }
 
+    public function delete(Request $request){
+      $route_id = $request->route_id;
+      if(!empty($route_id)){
+        DB::select("DELETE FROM trips WHERE route_id = '".$route_id."'");
+        DB::select("DELETE FROM route WHERE route_id = '".$route_id."'");
+        DB::select("DELETE FROM fare_rule WHERE route_id = '".$route_id."'");
+        return 'Data has been deleted'; 
+      }
+
+    }
+
     /*public function save_fare_attributes(Request $request){
       $price_fare_attributes = $request->price_fare_attributes;
       $fare_id = $request->fare_id;

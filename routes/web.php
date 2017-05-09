@@ -15,6 +15,9 @@ Route::get('/check', 'MapController@check');
 Route::post('/update', 'EditController@update');
 Route::post('/update_points', 'EditController@update_points');
 
+Route::post('/delete', 'EditController@delete');
+
+
 Route::post('/save_fare_attributes', 'EditController@save_fare_attributes');
 
 Route::post('/insert', 'InputController@insert');

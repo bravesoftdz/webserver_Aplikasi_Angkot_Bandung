@@ -1097,7 +1097,7 @@ class ApiController extends Controller
         $array = explode(",", $shape_id);
        
      
-        $shape = shape::/*select(['id','shape_pt_lat','shape_pt_lon'])->*/whereIn('shape_id', $array )
+        $shape = shape::select(['id','shape_id','shape_pt_lat','shape_pt_lon','shape_pt_sequence','jalur','place_info'])->whereIn('shape_id', $array )
                              ->orderByRaw(DB::raw("FIELD( shape_id, ".$shape_id." )"))
                              ->orderByRaw('shape_pt_sequence', 'Asc')
                              ->get();
