@@ -11,9 +11,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
 
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3y8eFg4RsElrdt7Gw-qAj78dWrQ4N21w&libraries=geometry&callback=initMap">
-</script>
+
 
 <script type="text/javascript">
 
@@ -196,5 +194,7 @@
 
 </script>
 
-
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3y8eFg4RsElrdt7Gw-qAj78dWrQ4N21w&libraries=geometry&callback=initMap">
+</script>
 @endsection

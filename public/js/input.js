@@ -318,12 +318,12 @@ $(document).ready(function(){
     $('#colorSelector_panel').ColorPicker({
       color: '#0000ff',
       onShow: function (tt) {
-        $(tt).css("z-index", "2");
+        $(tt).css("z-index", "9999");
         $(tt).fadeIn(500);
         return false;
       },
       onHide: function (tt) {
-        $(tt).css("z-index", "2");
+        $(tt).css("z-index", "9999");
         $(tt).fadeOut(500);
         return false;
       },

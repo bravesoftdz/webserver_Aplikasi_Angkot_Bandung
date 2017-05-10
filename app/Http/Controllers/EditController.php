@@ -71,8 +71,8 @@ class EditController extends Controller
 
      if( $request->hasFile('file') && !file_exists( public_path('images/'.$file->getClientOriginalName() ) )){
         $imageName = $file->getClientOriginalName();
-        $file->storeAs('images', $imageName);//move(public_path('images'), $imageName );
-        
+        //$file->storeAs('images', $imageName);//move(public_path('images'), $imageName );
+        $file->move( public_path('images'), $imageName );;
      }
 
      session::flash("flash_notification", [
