@@ -452,7 +452,7 @@
                     <td></td>
                     <td>
                       <button type="button" class="btn btn-primary" id="button_clear" >
-                        Clear
+                        Cancel
                       </button>
 
                       <button type="submit" class="btn btn-primary" id="button_save" >

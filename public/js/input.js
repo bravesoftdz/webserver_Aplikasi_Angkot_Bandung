@@ -48,29 +48,35 @@ function initMap()
   //clear button
   $("#button_clear").on('click', function(e){
     e.preventDefault();
-    if(hasAddListener == true)
+    var q = confirm('Yakin Akan Input Ulang Data ?');
+    if( q == true)
     {
-      google.maps.event.clearListeners(Polyline.getPath() , "set_at");
-      google.maps.event.clearListeners(Polyline.getPath() , "insert_at");
-      google.maps.event.clearListeners(Polyline.getPath() , "remove_at");
+        if(hasAddListener == true)
+        {
+          google.maps.event.clearListeners(Polyline.getPath() , "set_at");
+          google.maps.event.clearListeners(Polyline.getPath() , "insert_at");
+          google.maps.event.clearListeners(Polyline.getPath() , "remove_at");
+        }
+        $("#namaTrayek").val('');
+        $("#noTrayek").val('');
+        $("#shape_id").val('');
+        $("#keterangan").val('');
+        $("#price").val('');
+        $("#image").val('');
+        array_Line.clear();
+        data = [];
+        cekIdMarker = [];
+        clear_marker();
+    
+    
+    
+        newData = [];
+        map.setCenter({lat: -6.914838922559386, lng: 107.60765075683594});
+        map.setZoom(13);
     }
-    $("#namaTrayek").val('');
-    $("#noTrayek").val('');
-    $("#shape_id").val('');
-    $("#keterangan").val('');
-    $("#price").val('');
-    $("#image").val('');
-    array_Line.clear();
-    data = [];
-    cekIdMarker = [];
-    clear_marker();
-
-
-
-    newData = [];
-    map.setCenter({lat: -6.914838922559386, lng: 107.60765075683594});
-    map.setZoom(13);
   })
+
+
 
   $("#pilih").on("change", function(){
     var select_pilih = $("#pilih").val();
@@ -120,46 +126,76 @@ function initMap()
       }
       //fungsinya apabila ada perubahan array line, baik itu insertAt, removeAt, atau setAt 
       // kalau tidak ada, memang wasting time
-      for (var i = 0; i < array_Line.getArray().length; i++) {
-        newData[i].shape_pt_lat = array_Line.getAt(i).lat();
-        newData[i].shape_pt_lon = array_Line.getAt(i).lng();
+      var isValid = false;
+      if( $("#file").val() !== ""  ){ //cek tombol browse menampung file.
+
+        // cek extention file yang ditampung.
+        var diperbolehkan = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
         
+        var namaGambar = $("#file").val() ; 
+        namaGambar = namaGambar.split('fakepath\\');
+        namaGambar = namaGambar[1];
+        for(i in diperbolehkan){
+          if(namaGambar.substr( namaGambar.length - diperbolehkan[i].length , diperbolehkan[i].length ).toLowerCase() == diperbolehkan[i].toLowerCase() && $("#file")[0].files[0].size < 5000 )
+          {
+            isValid = true;
+          }  
+        }
+
+      }
+      else{
+        //isValid = true;
+        alert('Mohon Pilih Gambar terlebih dahulu')
+
+        return false;
       }
 
-      var objectData = {
-        '_token': $('meta[name=csrf-token]').attr('content'),
-        data: newData,
-        route_id: $("#route_id").val()
-      }
-
-      
-      var tmp = [];
-      for (i in newData)
+      if(isValid == true)
       {
-        tmp.push( newData[i].shape_id ) ;
-      }
-      tmp = tmp.join(', ');
-      $("#shape_id").val(tmp);    
-      console.log(objectData);
-
-      $.ajax({
-        type: "POST",
-        url: "http://localhost/webserverangkot/public/insert_points",
-        data: objectData,
-        success: function(data){
-          console.log(data);
-          $("#form").submit();
-        },
-        error:function(jqXHR, textStatus, errorThrown) {
-             console.log(textStatus, errorThrown);
-             return false;
+          for (var i = 0; i < array_Line.getArray().length; i++) {
+            newData[i].shape_pt_lat = array_Line.getAt(i).lat();
+            newData[i].shape_pt_lon = array_Line.getAt(i).lng();
+            
           }
-      });
-
+    
+          var objectData = {
+            '_token': $('meta[name=csrf-token]').attr('content'),
+            data: newData,
+            route_id: $("#route_id").val()
+          }
+    
+          
+          var tmp = [];
+          for (i in newData)
+          {
+            tmp.push( newData[i].shape_id ) ;
+          }
+          tmp = tmp.join(', ');
+          $("#shape_id").val(tmp);    
+          console.log(objectData);
+    
+          $.ajax({
+            type: "POST",
+            url: "http://localhost/webserverangkot/public/insert_points",
+            data: objectData,
+            success: function(data){
+              console.log(data);
+              $("#form").submit();
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+                 console.log(textStatus, errorThrown);
+                 return false;
+              }
+          });
       
+      }
+      else{
+          alert('Gambar Harus berformat ".jpg", ".jpeg", ".bmp", ".gif", ".png" dan dibawah 5KB ')
+          return false;
+      }
   });
 
-  $("#file").on('change',function(){
+  /*$("#file").on('change',function(){
      //console.log( $("#file").val() );
      var namaGambar = $("#file").val() ; 
      namaGambar = namaGambar.split('fakepath\\');
@@ -169,6 +205,31 @@ function initMap()
      $("#image_panel").val('public/images/'+namaGambar[1] ) ;
      $("#image_place_panel").empty();     
 
+  });*/
+  $(".file").on('change',function(e){
+     //console.log( $("#file").val() );
+     var isValid = false;
+     var diperbolehkan = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+     var namaGambar = $("#file").val() ; 
+     namaGambar = namaGambar.split('fakepath\\');
+     namaGambar = namaGambar[1];
+     for(i in diperbolehkan){
+        if(namaGambar.substr( namaGambar.length - diperbolehkan[i].length , diperbolehkan[i].length ).toLowerCase() == diperbolehkan[i].toLowerCase() && $("#file")[0].files[0].size < 5000  )
+        {     
+          isValid = true;
+        }  
+     }
+
+      if( isValid == true){
+         $("#image").val('public/images/'+namaGambar ) ;
+         $("#image_place").empty();
+         $("#image_panel").val('public/images/'+namaGambar ) ;
+      }
+      else{
+          alert('Gambar Harus berformat ".jpg", ".jpeg", ".bmp", ".gif", ".png" dan dibawah 5KB ');
+          
+          return false;
+      }
   });
 
   $("#fare_id").on('change', function(){
@@ -297,16 +358,21 @@ $(document).ready(function(){
 
     $("#button_clear_panel").on('click' , function(e){
         e.preventDefault();
-        $("#namaTrayek").val('');
-        $("#noTrayek").val('');
-        
-        $("#keterangan").val('');
-        $("#price").val('');
-        $("#image").val('');
-        $('#colorSelector_panel div').css('backgroundColor', '');
-        $('#colorText_panel').text('Changes Color (Click Me !)');
-        $('#route_color_panel').val('');
-        cekIdMarker = [];
+        var q = confirm('Yakin Akan Input Ulang Data ?')
+        if(q == true){
+                $("#namaTrayek_panel").val('');
+                $("#noTrayek_panel").val('');
+                
+                $("#keterangan_panel").val('');
+                $("#price_panel").val('');
+                //$("#image").val('');
+                $("#image_panel").val('');
+                
+                $('#colorSelector_panel div').css('backgroundColor', '');
+                $('#colorText_panel').text('Changes Color (Click Me !)');
+                $('#route_color_panel').val('');
+                cekIdMarker = [];
+        }
     });
 
     

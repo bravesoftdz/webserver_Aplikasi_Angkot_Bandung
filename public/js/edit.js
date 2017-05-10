@@ -86,90 +86,139 @@ function initMap()
 
   $("#button_clear").on('click', function(){
     
-    
-    setMapOnAll(null);
-    del_polyline();
-    $(".table").hide();
-    $("#textarea").val('');
-    $('input[type=radio][name=add]').prop("checked", false);
-    addMarker = [];
-    //hasAddListener = false;
-    new_shapes = [] ;
-    array_Line.clear();  //new google.maps.MVCArray() ;
-    array_shape_id = [];
-    cekIdMarker = [];
-    tmp = '';
-    $("#query").empty();
-    $("#trips").empty();
-    map.setCenter({lat: -6.914838922559386, lng: 107.60765075683594});
-    map.setZoom(13);
-  
-    $("#namaTrayek").val('');
-    $("#route_id").val('');
-    $('#colorSelector div').css('backgroundColor', '#ffffff' );
-    $("#price").val('');
-    $("#image").val('');
-    $("#keterangan").val('');
-    $("#shape_id").val('');
-    $("#image_place").empty();
-    $("#colorText").text('Change Color');
-    $("#trip_headsign").val('');    
-
+    var q = confirm('Batal Edit Data ??');
+    if(q == true)
+    {
+        setMapOnAll(null);
+        del_polyline();
+        $(".table").hide();
+        $("#textarea").val('');
+        $('input[type=radio][name=add]').prop("checked", false);
+        addMarker = [];
+        //hasAddListener = false;
+        new_shapes = [] ;
+        array_Line.clear();  //new google.maps.MVCArray() ;
+        array_shape_id = [];
+        cekIdMarker = [];
+        tmp = '';
+        $("#query").empty();
+        $("#trips").empty();
+        map.setCenter({lat: -6.914838922559386, lng: 107.60765075683594});
+        map.setZoom(13);
+      
+        $("#namaTrayek").val('');
+        $("#route_id").val('');
+        $('#colorSelector div').css('backgroundColor', '#ffffff' );
+        $("#price").val('');
+        $("#image").val('');
+        $("#keterangan").val('');
+        $("#shape_id").val('');
+        $("#image_place").empty();
+        $("#colorText").text('Change Color');
+        $("#trip_headsign").val('');    
+    }
   })
 
-  $("#file").on('change',function(){
+  $("#file").on('change',function(e){
      //console.log( $("#file").val() );
+     var isValid = false;
+     var diperbolehkan = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
      var namaGambar = $("#file").val() ; 
      namaGambar = namaGambar.split('fakepath\\');
-     $("#image").val('public/images/'+namaGambar[1] ) ;
-     $("#image_place").empty();
-     $("#image_place").append("<img class='img-responsive' src='"+ $("#file").val() +"'>");
+     namaGambar = namaGambar[1];
+     for(i in diperbolehkan){
+        if(namaGambar.substr( namaGambar.length - diperbolehkan[i].length , diperbolehkan[i].length ).toLowerCase() == diperbolehkan[i].toLowerCase() && $("#file")[0].files[0].size < 5000  )
+        {     
+          isValid = true;
+        }  
+     }
 
+      if( isValid == true){
+         $("#image").val('public/images/'+namaGambar ) ;
+         $("#image_place").empty();
+         //$("#image_place").append("<img class='img-responsive' src='"+ $("#file").val() +"'>");
+      }
+      else{
+          alert('Gambar Harus berformat ".jpg", ".jpeg", ".bmp", ".gif", ".png" dan dibawah 5KB ');
+          
+          return false;
+      }
   });
 
   $("#button_save").on('click', function(e){   
     //hapus isi textarea dulu
     e.preventDefault();
-    if($("#route_id").val() == '')
-    {
-      alert('pilih trayek angkot dulu ');
-      $("#button_clear").trigger('click');
-      return false;
-
-    }
-    var tmp = [];
-    for (i in data){
-      var lat = points.getAt(i).lat();
-      var lng = points.getAt(i).lng()
-      data[i].shape_pt_lat = lat.toString();
-      data[i].shape_pt_lon = lng.toString() ;
-      tmp.push( data[i].shape_id );
-    }
-    tmp = tmp.join(", ");
-    $("#shape_id").val(tmp);
-
-    var objectData = {
-      '_token': $('meta[name=csrf-token]').attr('content'),
-      data: data,
-      route_id: $("#route_id").val()
-    }
-
-    $.ajax({
-      type: "POST",
-      url: "http://localhost/webserverangkot/public/update_points",
-      data: objectData,
-      success: function(data){
-        console.log(data);
-        alert(data);
-        $("#form").submit();
-      },
-      error:function(jqXHR, textStatus, errorThrown) {
-           console.log(textStatus, errorThrown);
-           alert(textStatus, errorThrown);
-           return false;
-        }
-    });
+    var q = confirm('Yakin Akan Memperbarui Data ?')
+    if(q == true){
+        if($("#route_id").val() == '')
+        {
+          alert('pilih trayek angkot dulu ');
+          $("#button_clear").trigger('click');
+          return false;
     
+        }
+
+        var isValid = false;
+        if( $("#file").val() !== ""  ){ //cek tombol browse menampung file.
+
+          // cek extention file yang ditampung.
+          var diperbolehkan = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+          
+          var namaGambar = $("#file").val() ; 
+          namaGambar = namaGambar.split('fakepath\\');
+          namaGambar = namaGambar[1];
+          for(i in diperbolehkan){
+            if(namaGambar.substr( namaGambar.length - diperbolehkan[i].length , diperbolehkan[i].length ).toLowerCase() == diperbolehkan[i].toLowerCase() && $("#file")[0].files[0].size < 5000 )
+            {
+              isValid = true;
+            }  
+          }
+
+        }
+        else{
+          isValid = true;
+        }
+
+        if(isValid == true)
+        {
+            var tmp = [];
+            for (i in data){
+              var lat = points.getAt(i).lat();
+              var lng = points.getAt(i).lng()
+              data[i].shape_pt_lat = lat.toString();
+              data[i].shape_pt_lon = lng.toString() ;
+              tmp.push( data[i].shape_id );
+            }
+            tmp = tmp.join(", ");
+            $("#shape_id").val(tmp);
+        
+            var objectData = {
+              '_token': $('meta[name=csrf-token]').attr('content'),
+              data: data,
+              route_id: $("#route_id").val()
+            }
+        
+            $.ajax({
+              type: "POST",
+              url: "http://localhost/webserverangkot/public/update_points",
+              data: objectData,
+              success: function(data){
+                console.log(data);
+                alert(data);
+                $("#form").submit();
+              },
+              error:function(jqXHR, textStatus, errorThrown) {
+                   console.log(textStatus, errorThrown);
+                   alert(textStatus, errorThrown);
+                   return false;
+                }
+            });
+        }
+        else{
+          alert('Gambar Harus berformat ".jpg", ".jpeg", ".bmp", ".gif", ".png" dan dibawah 5KB ')
+          return false;
+        }
+    }
     
   })
 

@@ -49,7 +49,7 @@ class InputController extends Controller
 	     if( $request->hasFile('file') && !file_exists( public_path('images/'.$file->getClientOriginalName() ) )){
 	        $imageName = $file->getClientOriginalName();
 	        //$file->storeAs('images', $imageName);
-	        $file->move( public_path('images'), $imageName );;
+	        $file->move( public_path('images'), $imageName );
 	     }
 	     //route_id = auto_increment
 	     DB::select("INSERT INTO trips VALUES ('".$route_id."','0','".$trip_headsign."','".$trip_short_name."','','','".$shape_id."','','".$keterangan."' )");
