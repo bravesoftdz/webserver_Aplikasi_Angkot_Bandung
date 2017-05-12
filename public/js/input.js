@@ -93,8 +93,18 @@ function initMap()
           var lng = data[i].shape_pt_lon;
           var id = data[i].id;
           var LatLng = new google.maps.LatLng(lat,lng);
-          
-          make_marker(LatLng, data[i].shape_id, '', id );
+          //var icon = "http://maps.google.com/mapfiles/kml/shapes/road_shield3.png";
+          var icon = {
+            url: "http://maps.google.com/mapfiles/kml/shapes/road_shield3.png",
+            // This marker is 20 pixels wide by 32 pixels high.
+            //size: new google.maps.Size(16, 16),
+            // The origin for this image is (0, 0).
+            //origin: new google.maps.Point(0, 0),
+            // The anchor for this image is the base of the flagpole at (0, 32).
+            //anchor: new google.maps.Point(0, 32)
+            scaledSize: new google.maps.Size(15, 15)
+          };
+          make_marker(LatLng, data[i].shape_id, icon, id );
         }
       }
     });

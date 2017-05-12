@@ -357,7 +357,7 @@
                           <td><label for="exampleInputPassword1">
                                 Keterangan
                             </label></td>
-                          <td><textarea class="form-control" id="keterangan_panel" name="keterangan_panel" placeholder="informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
+                          <td><textarea class="form-control" id="keterangan_panel" name="keterangan_panel" placeholder="Informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
                         </tr>
                         <tr>
                           <td></td>
@@ -501,7 +501,7 @@
                 {{csrf_field()}}
 
               <label for="exampleInputEmail1">
-                  Trayek Angkot
+                  Import Data Trayek Angkot
               </label>
               <select class="form-control" id="pilih" name="pilih">
                 <option value=99> All </option>
@@ -595,7 +595,7 @@
                     <td><label for="exampleInputPassword1">
                           Keterangan
                       </label></td>
-                    <td><textarea class="form-control" id="keterangan" name="keterangan" placeholder="informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
+                    <td><textarea class="form-control" id="keterangan" name="keterangan" placeholder="Informasi terkait rute yang dilewati. Contoh : Terminal Cibiru – Jl. Sukarno-Hatta – Pasar Induk Gede Bage (Sukarno-Hatta) – Riung Bandung (Sukarno-Hatta) – Metro (Sukarno-Hatta) – Margahayu Raya (Sukarno-Hatta) – Jl. Kiara Condong – Jl. Jakarta – Jl. Ahmad Yani – Cicadas (Ahmad Yani)"></textarea></td>
                   </tr>
                   <tr>
                     <td></td>
