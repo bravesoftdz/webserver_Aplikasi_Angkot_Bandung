@@ -387,7 +387,7 @@
 
     <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12" style="z-index: 8">
+        <div class="col-md-12" style="z-index: 8; padding: 0">
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-image: url('http://localhost/webserverangkot/public/images/header.png'); background-size: 100% 100%; ">
                 <div class="navbar-header">
                     <button type="button" class=" navbar-toggle button navbar-left"  data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" id="menu-toggle" style="float: left; margin-left: 10px; "  >

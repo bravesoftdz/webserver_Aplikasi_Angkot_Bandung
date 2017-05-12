@@ -41,8 +41,8 @@
 
         .se-pre-con {
         position: fixed;
-        left: 0px;
-        top: 0px;
+        /*left: 0px;
+        top: 0px;*/
         width: 100%;
         height: 100%; 
         z-index: 9999; 
@@ -266,7 +266,7 @@
 
     <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12" style="z-index: 998">
+        <div class="col-md-12" style="z-index: 998; padding: 0">
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-image: url('http://localhost/webserverangkot/public/images/header.png'); background-size: 100% 100%; ">
                 
                 <div class="navbar-header">
@@ -339,7 +339,7 @@
                   
                   
                  
-              <div class="se-pre-con"></div>
+              
                   
               <form id="form"  enctype="multipart/form-data" method="POST" enctype="multipart/form-data">
               {{csrf_field()}}
@@ -366,7 +366,7 @@
               @yield('content')    
         </div>
            
-        
+        <div class="se-pre-con"></div>
         <div class="col-md-8" style="height: 550px">
              <div id="map" style="height: 100%; width: 95%; ">                    
              </div>

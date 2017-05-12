@@ -1569,22 +1569,22 @@ class ApiControl extends Controller
                     //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
                     $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
                   }
-               }
-               else
-               {
-                  //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
-                  
-                    $naik = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->start_address;
-                    $naik = explode(", ", $naik);
+                }
+                else
+                {
+                    //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
+                    
+                      $naik = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->start_address;
+                      $naik = explode(", ", $naik);
 
-                    $jarak = $routingresult[$i]['step'][$j]['distance'];
-                    $jarak = explode(".", $jarak);
+                      $jarak = $routingresult[$i]['step'][$j]['distance'];
+                      $jarak = explode(".", $jarak);
 
-                    //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                    //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
+                      //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
+                      //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
+                      $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
 
-               }
+                }
               }
               else
               {

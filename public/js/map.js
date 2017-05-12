@@ -593,9 +593,19 @@ function initMap() {
        
 
         for (var i = 0; i < marker_intersection.length; i++) {
-
+          if(typeof markerIcon[i] == 'undefined' )
+          {
+            markerIcon[i] = {
+              url: 'http://localhost/webserverangkot/public/images/finish_flag.png',
+              //'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+              
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(0, 32),
+              scaledSize: new google.maps.Size(30, 30)
+            }
+          }
           make_marker( marker_intersection[i], markerIcon[i] );
-          console.log(marker_intersection[i]);
+          console.log(marker_intersection[i], markerIcon[i] );
         }
 
         var bound =  new google.maps.LatLngBounds();
@@ -745,7 +755,17 @@ function initMap() {
      
         
       for (var i = 0; i < marker_intersection.length; i++) {
-
+        if(typeof markerIcon[i] == 'undefined' )
+        {
+          markerIcon[i] = {
+            url: 'http://localhost/webserverangkot/public/images/finish_flag.png',
+            //'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 32),
+            scaledSize: new google.maps.Size(30, 30)
+          }
+        }
         make_marker( marker_intersection[i], markerIcon[i] );
         //console.log(marker_intersection[i]);
       }
@@ -1067,6 +1087,17 @@ function initMap() {
 
 
         for (var i = 0; i < marker_intersection.length; i++) {
+          if(typeof markerIcon[i] == 'undefined' )
+          {
+            markerIcon[i] = {
+              url: 'http://localhost/webserverangkot/public/images/finish_flag.png',
+              //'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+              
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(0, 32),
+              scaledSize: new google.maps.Size(30, 30)
+            }
+          }
           make_marker( marker_intersection[i], markerIcon[i] );
         }
 
