@@ -338,11 +338,24 @@ function initMap()
       }
       
     }
-    console.log(urutan);
     newData.splice(urutan, 1);
     
             
   });
+
+  google.maps.event.addListener(Polyline , "rightclick" , function(event){
+        
+        var minDist = Number.MAX_VALUE;
+        for (var i=0; i<this.getPath().getLength(); i++){
+          var distance = google.maps.geometry.spherical.computeDistanceBetween(event.latLng, this.getPath().getAt(i));
+          if (distance < minDist) {
+            minDist = distance;
+            index = i;
+          }
+        }
+        array_Line.removeAt(index);  
+            
+    });
 
 } // tutup initMap
 

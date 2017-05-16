@@ -154,6 +154,37 @@ function initMap()
       }
   });
 
+  $("#shape_id").on('change', function(){
+      
+      //console.log( $("#shape_id").val() );
+      var tmp = $("#shape_id").val();
+      tmp = tmp.split(", ");
+      //console.log(tmp);
+      for( i in tmp){
+        var result = $.grep(data, function(item, n){
+            return item.shape_id == tmp[i] ;
+        });
+
+        if(result.length != 0){ // di shape id dihapus, maka hapus juga data.
+          console.log(result[0]);
+
+        }
+      }
+
+  });
+
+  $("#btnShapeId").on('click', function(e){   
+    
+    e.preventDefault();
+    var q = confirm('yakin akan reset jalur ?')
+    if(q == true){
+      points.clear();
+      $("#shape_id").val('');
+    }
+
+  });  
+
+
   $("#button_save").on('click', function(e){   
     //hapus isi textarea dulu
     e.preventDefault();
@@ -312,13 +343,9 @@ function initMap()
   
 
   map.addListener("click", function(event){
-
-    if($("#addMarker").is(':checked'))
-    {
-      make_marker(event.latLng);
       
-    }
-
+      //make_marker(event.latLng);
+      points.push(event.latLng);
   });
 
   $('#colorSelector').ColorPicker({
@@ -384,8 +411,8 @@ var make_marker = function(a, shape_id ='', icon, id='' ){
 
   google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
         return function() {
-            infowindow.setContent(""+content);
-            infowindow.open(map,this);
+            //infowindow.setContent(""+content);
+            //infowindow.open(map,this);
             var originPoint = this.getPosition();
             var oLat = parseFloat(this.getPosition().lat().toFixed(4));
             var oLng = parseFloat(this.getPosition().lng().toFixed(4));
@@ -583,7 +610,7 @@ function pilih_change(route_id = 1){
     $("#keterangan").val(""+angkot[0].ket);
     $("#shape_id").val(""+angkot[0].shape_id);
     $("#image_place").empty();
-    $("#image_place").append("<img class='img-responsive' src='http://localhost/webserverangkot/"+angkot[0].image+"'>")
+    $("#image_place").append("<img class='img-responsive' height='54' width='94'  src='http://localhost/webserverangkot/"+angkot[0].image+"'>")
     $("#trip_headsign").val(angkot[0].trip_headsign);
     var bound =  new google.maps.LatLngBounds();
     for (var i = 0; i < pointsLokal.length; i++) {

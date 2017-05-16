@@ -332,7 +332,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4" style="" >
+        <div class="col-md-4 pre-scrollable" style="max-height: 550px" >
           
             <!--<img alt="Bootstrap Image Preview" src="http://localhost/webserverangkot/public/images/powered_by.png" class="img-circle" style="border: solid;"> -->
                 <div id="select_routingresult">

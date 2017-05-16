@@ -436,6 +436,10 @@
                     <td>
                       <!-- <input type="input" id="shape_id" class="form-control" > -->
                       <textarea id="shape_id" class="form-control" name="shape_id" ></textarea>
+                      <br>
+                      <button id="btnShapeId" class="btn btn-primary">
+                          Reset jalur
+                      </button>
                     </td>
                   </tr>
                   <tr>
