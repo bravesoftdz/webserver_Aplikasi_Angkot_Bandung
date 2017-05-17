@@ -588,8 +588,10 @@ function pilih_change(route_id = 1){
             index = i;
           }
         }
-        points.removeAt(index);  
-        console.log(index);      
+        removeA(cekIdMarker, data[index].id  );
+        points.removeAt(index);
+        //cekIdMarker.splice(index, 1);  
+              
     });
 
     //Isi form dengan data angkot
@@ -625,7 +627,16 @@ function pilih_change(route_id = 1){
   }) ;
 }
 
-
+function removeA(arr) { //for remove array with value
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
 
 function get_point(terima=1) {
  

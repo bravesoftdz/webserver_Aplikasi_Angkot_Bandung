@@ -1077,8 +1077,9 @@ class ApiController extends Controller
 
      public function get_trayek_akbar($kirim = 1)
     {
-        if(isset($_GET['kirim'])){
-        $route_id = $_GET['kirim'];
+        if(isset($_GET['kirim']))
+        {
+          $route_id = $_GET['kirim'];
         }
         else
         {
@@ -1090,10 +1091,17 @@ class ApiController extends Controller
           return $shape;
         }
 
-        $index = ($route_id - 1);
-        $trip = trip::all()->where('route_id', '=', $route_id);
-        //return $trip;
+        $index = 0;//($route_id - 1);
+        $trip = trip::where('route_id', '=', $route_id)->get();
+        
+        
+        if( !isset($trip[0]) )
+        {
+          return "there's no route with route_id = ".$route_id;
+        }
+
         $shape_id = $trip[$index]['shape_id'];
+        
         $array = explode(",", $shape_id);
        
      
