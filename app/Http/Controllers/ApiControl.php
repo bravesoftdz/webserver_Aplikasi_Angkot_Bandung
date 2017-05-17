@@ -207,8 +207,9 @@ class ApiControl extends Controller
         $route_id = $kirim;
       }
       
-      $index = ($route_id - 1);
-      $trip = trip::all()->where('route_id', '=', $route_id);
+      $index = 0;//($route_id - 1);
+      $trip = trip::where('route_id', '=', $route_id)->get();
+      
       $shape_id = $trip[$index]['shape_id'];
       $array = explode(",", $shape_id);
      
@@ -320,8 +321,8 @@ class ApiControl extends Controller
         $route_id = $kirim;
       }
       
-      $index = ($route_id - 1);
-      $trip = trip::all()->where('route_id', '=', $route_id);
+      $index = 0;//($route_id - 1);
+      $trip = trip::where('route_id', '=', $route_id)->get();
       $shape_id = $trip[$index]['shape_id'];
       $array = explode(",", $shape_id);
      
@@ -1100,6 +1101,8 @@ class ApiControl extends Controller
           $angkot_finish_intersec = $angkot_finish[$no_intersec[$i]['finish']];
 
           $data_shapes2 = $this->get_trayek_potong($angkot_finish_intersec->route_id ,  $potong_akhir_start[0]->id , $pickup_point_finish[ $no_intersec[$i]['finish']]->titik_terdekat->id );
+          
+
 
           $step[] = ["angkot"=>[$angkot_finish_intersec] , "jalur" => $data_shapes2 ];
           
