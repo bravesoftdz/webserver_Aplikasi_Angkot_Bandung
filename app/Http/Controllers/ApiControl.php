@@ -840,58 +840,35 @@ class ApiControl extends Controller
                 $a = $routingresult[$i]['step'][$j]['jalur'][0];
                 $b = $routingresult[$i]['step'][$j]['jalur'][1];
                   
-                if(empty($a->place_info)) 
-                {
-                  
-                  if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
-                    continue;
-                  }
-                  $param1 = $a->lat .",". $a->lng;
-                  $param2 = $b->lat .",". $b->lng;
-                   $naik = $this->getLocInfo($param1); 
-    
-                  //$turun = $this->getLocInfo($param1);
-                  $naik = $naik->results[0]->formatted_address;
-                  $naik = explode(", ", $naik);
-
-                  $jarak = $routingresult[$i]['step'][$j]['distance'];
-                  $jarak = explode(".", $jarak);
-                  //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
-                }
-                else
-                {
-
-                  if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                
+                if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
                     continue;
                   }
                   $param1 = $a->lat .",". $a->lng;
                   $param2 = $b->lat .",". $b->lng;
                   //$naik = $this->getLocInfo($param1); 
-    
-                  //$turun = $this->getLocInfo($param1);
-                  $naik =  $a->place_info;//$naik->results[0]->formatted_address;
-                  $naik = explode(", ", $naik);
-
-                  $jarak = $routingresult[$i]['step'][$j]['distance'];
-                  $jarak = explode(".", $jarak); 
-                  //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
-                }
-             }
-             else
-             {
-                //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
-                
-                  $naik = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->start_address;
-                  $naik = explode(", ", $naik);
+                  $turun = $this->getLocInfo($param2);
+                  $turun = $turun->results[0]->formatted_address;
+                  $turun = explode(",", $turun );
+                  $turun = $turun[0];
 
                   $jarak = $routingresult[$i]['step'][$j]['distance'];
                   $jarak = explode(".", $jarak);
 
-                  //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                  //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
+
+              }
+             else
+             {
+                  $turun = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->end_address;
+                  $turun = explode(",", $turun);
+                  $turun = $turun[0];
+                  
+                  $jarak = $routingresult[$i]['step'][$j]['distance'];
+                  $jarak = explode(".", $jarak);
+
+                  
+                  $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
 
              }
             }
@@ -1471,6 +1448,7 @@ class ApiControl extends Controller
 
         
         //penambahan logika ket // penambahan keterangan        
+        
         foreach ($routingresult as $i => $value) {
             # code...
             foreach ($routingresult[$i]['step'] as $j => $value) {
@@ -1534,60 +1512,37 @@ class ApiControl extends Controller
                   $a = $routingresult[$i]['step'][$j]['jalur'][0];
                   $b = $routingresult[$i]['step'][$j]['jalur'][1];
                     
-                  if(empty($a->place_info)) 
-                  {
-                    
-                    if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
-                      continue;
-                    }
-                    $param1 = $a->lat .",". $a->lng;
-                    $param2 = $b->lat .",". $b->lng;
-                     $naik = $this->getLocInfo($param1); 
-      
-                    //$turun = $this->getLocInfo($param1);
-                    $naik = $naik->results[0]->formatted_address;
-                    $naik = explode(", ", $naik);
-
-                    $jarak = $routingresult[$i]['step'][$j]['distance'];
-                    $jarak = explode(".", $jarak);
-                    //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
-                  }
-                  else
-                  {
-
-                    if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                  
+                  if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
                       continue;
                     }
                     $param1 = $a->lat .",". $a->lng;
                     $param2 = $b->lat .",". $b->lng;
                     //$naik = $this->getLocInfo($param1); 
-      
-                    //$turun = $this->getLocInfo($param1);
-                    $naik =  $a->place_info;//$naik->results[0]->formatted_address;
-                    $naik = explode(", ", $naik);
+                    $turun = $this->getLocInfo($param2);
+                    $turun = $turun->results[0]->formatted_address;
+                    $turun = explode(",", $turun );
+                    $turun = $turun[0];
 
                     $jarak = $routingresult[$i]['step'][$j]['distance'];
-                    $jarak = explode(".", $jarak); 
-                    //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
-                  }
+                    $jarak = explode(".", $jarak);
+
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
+
                 }
-                else
-                {
-                    //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
+               else
+               {
+                    $turun = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->end_address;
+                    $turun = explode(",", $turun);
+                    $turun = $turun[0];
                     
-                      $naik = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->start_address;
-                      $naik = explode(", ", $naik);
+                    $jarak = $routingresult[$i]['step'][$j]['distance'];
+                    $jarak = explode(".", $jarak);
 
-                      $jarak = $routingresult[$i]['step'][$j]['distance'];
-                      $jarak = explode(".", $jarak);
+                    
+                    $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
 
-                      //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                      //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                      $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
-
-                }
+               }
               }
               else
               {
@@ -2614,7 +2569,8 @@ class ApiControl extends Controller
 
                 //return $routingresult;
                 //penambahan logika ket //peenambahan keterangan
-                foreach ($routingresult as $i => $value) {
+                
+                /*foreach ($routingresult as $i => $value) {
                     # code...
                     foreach ($routingresult[$i]['step'] as $j => $value) {
                       # code...
@@ -2685,16 +2641,14 @@ class ApiControl extends Controller
                             }
                             $param1 = $a->lat .",". $a->lng;
                             $param2 = $b->lat .",". $b->lng;
-                             $naik = $this->getLocInfo($param1); 
-              
-                            //$turun = $this->getLocInfo($param1);
-                            $naik = $naik->results[0]->formatted_address;
-                            $naik = explode(", ", $naik);
+                            //$naik = $this->getLocInfo($param1); 
+                            $turun = $this->getLocInfo($param2);
+                            $turun = $turun->results[0]->formatted_address;
 
                             $jarak = $routingresult[$i]['step'][$j]['distance'];
                             $jarak = explode(".", $jarak);
                             //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
                           }
                           else
                           {
@@ -2704,21 +2658,35 @@ class ApiControl extends Controller
                             }
                             $param1 = $a->lat .",". $a->lng;
                             $param2 = $b->lat .",". $b->lng;
-                            //$naik = $this->getLocInfo($param1); 
-              
-                            //$turun = $this->getLocInfo($param1);
-                            $naik =  $a->place_info;//$naik->results[0]->formatted_address;
-                            $naik = explode(", ", $naik);
+                            
+                            $turun = $this->getLocInfo($param2);
+                            $turun = $turun->results[0]->formatted_address;
 
                             $jarak = $routingresult[$i]['step'][$j]['distance'];
                             $jarak = explode(".", $jarak); 
                             //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
                           }
-                       }
+                          if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                              continue;
+                            }
+                            $param1 = $a->lat .",". $a->lng;
+                            $param2 = $b->lat .",". $b->lng;
+                            //$naik = $this->getLocInfo($param1); 
+                            $turun = $this->getLocInfo($param2);
+                            $turun = $turun->results[0]->formatted_address;
+                            $turun = explode(",", $turun );
+                            $turun = $turun[0];
+
+                            $jarak = $routingresult[$i]['step'][$j]['distance'];
+                            $jarak = explode(".", $jarak);
+                            
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
+
+                        }
                        else
                        {
-                          //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
+                            $turun = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->end_address;
                           
                             $naik = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->start_address;
                             $naik = explode(", ", $naik);
@@ -2726,9 +2694,162 @@ class ApiControl extends Controller
                             $jarak = $routingresult[$i]['step'][$j]['distance'];
                             $jarak = explode(".", $jarak);
 
-                            //$routingresult[$i]['step'][$j]['ket'] = "walk from ".$naik[0]." to your destination " ; 
-                            //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari <strong>".$naik[0]."</strong> ke tujuan anda kurang lebih ".$jarak[0]." meter";
-                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda.";
+                            
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
+
+                       }
+                      }
+                      else
+                      {
+                        $a = $routingresult[$i]['step'][$j]['jalur'][0];
+                        $b = $routingresult[$i]['step'][$j]['jalur'][sizeof($routingresult[$i]['step'][$j]['jalur']) - 1];
+                        //return (array) $a;
+                        //ada yang salah dari jalur terakhir.
+                        if(empty($a)||empty($b))
+                        {
+                            if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                              continue;
+                            }
+                            $param1 = $a->lat .",". $a->lng;
+                            $param2 = $b->lat .",". $b->lng;
+                            $naik = $this->getLocInfo($param1); 
+                            $turun = $this->getLocInfo($param2);
+                            $naik = $naik->results[0]->formatted_address;
+                            $turun = $turun->results[0]->formatted_address;
+                            $naik = explode(", ", $naik);
+                            $turun = explode(", ", $turun);
+                            
+
+
+                            $jarak = $routingresult[$i]['step'][$j]['distance'];
+                            $jarak = explode(".", $jarak);
+                            $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
+              
+                            //$angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ;
+                            $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name .". ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign ;
+                            $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot ".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* Biasanya Ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i> <br> <i>* Ongkos Resmi : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->regular_price.". </i>" ;
+                        }
+                        else
+                        {
+                          if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) )
+                          {
+                            continue;
+                          }
+                          $param1 = $a->lat .",". $a->lng;
+                          $param2 = $b->lat .",". $b->lng;
+                          //$naik = $this->getLocInfo($param1); 
+                          //$turun = $this->getLocInfo($param2);
+                          $naik =  $a->place_info;//$naik->results[0]->formatted_address;
+                          $turun = $b->place_info;
+                          $naik = explode(", ", $naik);
+                          $turun = explode(", ", $turun);
+
+                          $jarak = $routingresult[$i]['step'][$j]['distance'];
+                          $jarak = explode(".", $jarak);
+
+                          $jarak[0] = number_format($jarak[0]/1000, 1, '.', '');//ceil( $jarak[0] / 1000 );
+
+                          $angkot = $routingresult[$i]['step'][$j]['angkot'][0]->trip_short_name ." ( ".$routingresult[$i]['step'][$j]['angkot'][0]->trip_headsign." )" ;
+                          //$routingresult[$i]['step'][$j]['ket'] = "take angkot ".$angkot." from ".$naik[0]." to ".$turun[0] ;
+                          //$routingresult[$i]['step'][$j]['ket'] = "Naik angkot <strong>".$angkot."</strong> dari <strong>".$naik[0]."</strong> ke <strong>".$turun[0]."</strong>" ;
+                          $routingresult[$i]['step'][$j]['ket'] = "Naik <strong>Angkot No.".$angkot."</strong> sampai <strong>".$turun[0]."</strong> sejauh <strong>".$jarak[0]." Km</strong>. <br> <i>* Biasanya Ongkos : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->price.". </i> <br> <i>* Ongkos Resmi : Rp. ".$routingresult[$i]['step'][$j]['angkot'][0]->regular_price.". </i>" ;
+                        }
+                      }
+
+                    }
+                }*/
+                foreach ($routingresult as $i => $value) {
+                  # code...
+                  foreach ($routingresult[$i]['step'] as $j => $value) {
+                      # code...
+                      if($j == 0)
+                      {
+                        if($walk_route=="no")
+                        {
+                          $a = $routingresult[$i]['step'][$j]['jalur'][0];
+                          $b = $routingresult[$i]['step'][$j]['jalur'][1];
+                            if(empty($b->place_info))              
+                            {
+                              if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                                            continue;
+                                          }
+                          
+                              $param1 = $a->lat .",". $a->lng;
+                              $param2 = $b->lat .",". $b->lng;
+                              $turun = $this->getLocInfo($param2);
+
+                              $turun = $turun->results[0]->formatted_address;
+                              
+                              $turun = explode(", ", $turun);
+                              $jarak = $routingresult[$i]['step'][$j]['distance'];
+                              $jarak = explode(".", $jarak);
+                              //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
+                              $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> dari posisi anda menuju <strong>".$turun[0]."</strong>.";
+                            }
+                            else
+                            {
+                              if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                                continue;
+                              }
+                          
+                              $param1 = $a->lat .",". $a->lng;
+                              $param2 = $b->lat .",". $b->lng;
+                              
+                              $turun = $b->place_info;
+                              $turun = explode(", ", $turun);
+                              $jarak = $routingresult[$i]['step'][$j]['distance'];
+                              $jarak = explode(".", $jarak);
+                              //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
+                              $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> dari posisi anda menuju <strong>".$turun[0]."</strong>.";
+                            }
+                        }
+                        else
+                        {
+                          //$turun = $routingresult[$i]['step'][$j]['jalur'][2]['routes'][0]['legs'][0]['end_address'];
+                          $turun = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->end_address;
+                          $turun = explode(", ", $turun);
+                          $jarak = $routingresult[$i]['step'][$j]['distance'];
+                          $jarak = explode(".", $jarak);
+                          //$routingresult[$i]['step'][$j]['ket'] = "Jalan dari posisi anda menuju <strong>".$turun[0]."</strong> kurang lebih ".$jarak[0]." meter" ;
+                          $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> dari posisi anda menuju <strong>".$turun[0]."</strong>.";
+                        }
+                      }
+                      else if($j == sizeof($routingresult[$i]['step'])-1 )
+                      {
+                        if($walk_route=="no")
+                        { 
+                          $a = $routingresult[$i]['step'][$j]['jalur'][0];
+                          $b = $routingresult[$i]['step'][$j]['jalur'][1];
+                            
+                          
+                          if(!isset($a->lat) || !isset($a->lng) || !isset($b->lat) || !isset($b->lng) ){
+                              continue;
+                            }
+                            $param1 = $a->lat .",". $a->lng;
+                            $param2 = $b->lat .",". $b->lng;
+                            //$naik = $this->getLocInfo($param1); 
+                            $turun = $this->getLocInfo($param2);
+                            $turun = $turun->results[0]->formatted_address;
+                            $turun = explode(",", $turun );
+                            $turun = $turun[0];
+
+                            $jarak = $routingresult[$i]['step'][$j]['distance'];
+                            $jarak = explode(".", $jarak);
+
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
+
+                        }
+                       else
+                       {
+                            $turun = $routingresult[$i]['step'][$j]['jalur'][2]->routes[0]->legs[0]->end_address;
+                            $turun = explode(",", $turun);
+                            $turun = $turun[0];
+                            
+                            $jarak = $routingresult[$i]['step'][$j]['distance'];
+                            $jarak = explode(".", $jarak);
+
+                            
+                            $routingresult[$i]['step'][$j]['ket'] = "Jalan kaki sejauh <strong>".$jarak[0]." meter</strong> sampai tujuan anda. ( <strong>".$turun."</strong> ) ";
 
                        }
                       }
@@ -2791,6 +2912,7 @@ class ApiControl extends Controller
 
                     }
                 }
+
                 return ["status"=>$status, "routingresult"=>$routingresult ];
 
                 
